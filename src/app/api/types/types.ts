@@ -24,6 +24,20 @@ export interface CreateTask {
   priority: string;
   dueDate: string;
   categoryId: string;
+  projectId: string;
+}
+
+export interface UpdateTask extends CreateTask {
+  status: string;
+}
+
+export interface CreateProject {
+  title: string;
+  description: string;
+}
+
+export interface UpdateProject extends CreateProject {
+  id: string;
 }
 
 export interface ResponseType {

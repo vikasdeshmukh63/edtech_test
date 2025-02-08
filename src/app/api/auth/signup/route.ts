@@ -4,6 +4,8 @@ import User from '../../models/user';
 import { AuthResponse, RegisterCredentials } from '../../types/types';
 import { hashPassword } from '../../utils/utils';
 
+export const runtime = 'nodejs';
+
 export async function POST(req: Request) {
   try {
     const { name, email, password }: RegisterCredentials = await req.json();

@@ -4,6 +4,8 @@ import connectToDatabase from '../../db/db';
 import { generateToken, verifyPassword } from '../../utils/utils';
 import User from '../../models/user';
 
+export const runtime = 'nodejs';
+
 export async function POST(req: Request) {
   try {
     const { email, password }: LoginCredentials = await req.json();
@@ -47,14 +49,15 @@ export async function POST(req: Request) {
       );
     }
 
-    const token = generateToken(existingUser._id);
+    const token = await generateToken(existingUser._id.toString());
 
     return NextResponse.json<AuthResponse>(
       {
         success: true,
         message: 'User signed in successfully',
+        token,
         user: {
-          id: existingUser._id,
+          id: existingUser._id.toString(),
           name: existingUser.name,
           email,
         },

@@ -1,0 +1,49 @@
+import connectToDatabase from '@/app/api/db/db';
+import Task from '@/app/api/models/task';
+import { ResponseType } from '@/app/api/types/types';
+import { NextResponse } from 'next/server';
+
+export async function DELETE(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const { id } = params;
+
+    if (!id) {
+      return NextResponse.json<ResponseType>({
+        success: false,
+        message: 'Task ID is required',
+      });
+    }
+
+    const userId = req.headers.get('x-user-id');
+    if (!userId) {
+      return NextResponse.json<ResponseType>({
+        success: false,
+        message: 'User not authenticated',
+      });
+    }
+
+    await connectToDatabase();
+
+    const task = await Task.findByIdAndDelete(id);
+
+    if (!task) {
+      return NextResponse.json<ResponseType>({
+        success: false,
+        message: 'Task not found',
+      });
+    }
+    return NextResponse.json<ResponseType>({
+      success: true,
+      message: 'Task deleted successfully',
+      data: task,
+    });
+  } catch (error) {
+    return NextResponse.json<ResponseType>({
+      success: false,
+      message: 'Failed to delete task',
+    });
+  }
+}

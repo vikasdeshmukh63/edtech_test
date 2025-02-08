@@ -10,6 +10,7 @@ import { Input } from '@/components/Input';
 import { Button } from '@/components/Button';
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 type AuthError = {
   message: string;
@@ -45,7 +46,7 @@ export default function SignIn() {
 
     try {
       await signInSchema.validate(formData, { abortEarly: false });
-      
+
       signin(
         {
           email: formData.email,
@@ -77,7 +78,8 @@ export default function SignIn() {
   };
 
   return (
-    <Container className="flex items-center justify-center h-screen w-full">
+    <Container className="flex items-center justify-center h-screen w-full relative">
+      <ThemeToggle className="absolute top-4 right-4" />
       <Card className="flex justify-between items-center gap-2 flex-col">
         <h1 className="text-center text-2xl font-bold">Signin</h1>
         <form onSubmit={handleSubmit} className="w-full space-y-4">

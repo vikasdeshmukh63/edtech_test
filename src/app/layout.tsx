@@ -6,7 +6,7 @@ import { ThemeProvider } from '@/providers/ThemeProvider';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import Header from '@/components/Header';
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],
@@ -34,7 +34,7 @@ export default function RootLayout({
       >
         <ThemeProvider>
           <QueryClientProvider>
-            <ThemeToggle />
+            <Header />
             {children}
           </QueryClientProvider>
         </ThemeProvider>

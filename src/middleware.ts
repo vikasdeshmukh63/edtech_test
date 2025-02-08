@@ -1,25 +1,22 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { verifyToken } from './app/api/utils/utils';
-import type { JwtPayload } from 'jsonwebtoken'; // Import JwtPayload type
 
 export const config = {
   matcher: ['/api/:path*'],
-  runtime: 'nodejs', // Specify Node.js runtime
+  runtime: 'edge',
 };
 
-export function middleware(request: NextRequest) {
-  const path = request.nextUrl.pathname; // Get the current request path
+export async function middleware(request: NextRequest) {
+  const path = request.nextUrl.pathname;
 
-  // Skip middleware for `/api/auth` routes
   if (path.startsWith('/api/auth')) {
     return NextResponse.next();
   }
 
-  // Check authentication for all other `/api` routes
   if (path.startsWith('/api')) {
     const tokenCookie = request.cookies.get('token');
-    const token = tokenCookie?.value; // Extract the token value
+    const token = tokenCookie?.value;
 
     if (!token) {
       return NextResponse.json(
@@ -29,20 +26,18 @@ export function middleware(request: NextRequest) {
     }
 
     try {
-      const decoded = verifyToken(token);
+      const decoded = await verifyToken(token);
 
-      if (!decoded || typeof decoded === 'string') {
+      if (!decoded || !decoded.userId) {
         return NextResponse.json(
           { success: false, message: 'Invalid token' },
           { status: 401 }
         );
       }
 
-      // Attach user info to the request headers
       const headers = new Headers(request.headers);
-      headers.set('x-user-id', decoded.userId);
+      headers.set('x-user-id', decoded.userId as string);
 
-      // Continue to the next middleware or route handler
       return NextResponse.next({
         request: {
           headers,
@@ -56,6 +51,7 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  // Continue to the next middleware or route handler for non-API routes
   return NextResponse.next();
 }
+
+export const runtime = 'nodejs';
