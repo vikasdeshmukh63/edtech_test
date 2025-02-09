@@ -55,7 +55,6 @@ export async function PUT(
       {
         success: true,
         message: 'Project updated successfully',
-        data: project,
       },
       { status: 200 }
     );

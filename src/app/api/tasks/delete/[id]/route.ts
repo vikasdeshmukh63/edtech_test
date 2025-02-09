@@ -27,23 +27,43 @@ export async function DELETE(
 
     await connectToDatabase();
 
-    const task = await Task.findByIdAndDelete(id);
+    const task = await Task.findById(id);
+
+    if (task.createdBy !== userId) {
+      return NextResponse.json<ResponseType>(
+        {
+          success: false,
+          message: 'You are not authorized to delete this task',
+        },
+        { status: 403 }
+      );
+    }
+
+    await Task.deleteOne({ _id: id });
 
     if (!task) {
-      return NextResponse.json<ResponseType>({
-        success: false,
-        message: 'Task not found',
-      });
+      return NextResponse.json<ResponseType>(
+        {
+          success: false,
+          message: 'Task not found',
+        },
+        { status: 404 }
+      );
     }
-    return NextResponse.json<ResponseType>({
-      success: true,
-      message: 'Task deleted successfully',
-      data: task,
-    });
+    return NextResponse.json<ResponseType>(
+      {
+        success: true,
+        message: 'Task deleted successfully',
+      },
+      { status: 200 }
+    );
   } catch (error) {
-    return NextResponse.json<ResponseType>({
-      success: false,
-      message: 'Failed to delete task',
-    });
+    return NextResponse.json<ResponseType>(
+      {
+        success: false,
+        message: 'Failed to delete task',
+      },
+      { status: 500 }
+    );
   }
 }

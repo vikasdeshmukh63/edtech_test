@@ -30,7 +30,7 @@ export async function POST(req: Request) {
 
     await connectToDatabase();
 
-    const project = await Project.create({
+    await Project.create({
       title,
       description,
       createdBy: userId,
@@ -40,7 +40,6 @@ export async function POST(req: Request) {
       {
         success: true,
         message: 'Project created successfully',
-        data: project,
       },
       { status: 201 }
     );

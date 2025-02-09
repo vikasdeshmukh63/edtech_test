@@ -25,10 +25,12 @@ export interface CreateTask {
   dueDate: string;
   categoryId: string;
   projectId: string;
+  assignedTo: string;
 }
 
 export interface UpdateTask extends CreateTask {
   status: string;
+  _id: string;
 }
 
 export interface CreateProject {
@@ -40,8 +42,15 @@ export interface UpdateProject extends CreateProject {
   id: string;
 }
 
+export interface AssignTask {
+  taskId: string;
+  userId: string;
+}
+
 export interface ResponseType {
   success: boolean;
   message: string;
   data?: unknown;
+  hasMore?: boolean;
+  total?: number;
 }

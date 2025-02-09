@@ -3,19 +3,33 @@
 import React, { useState } from 'react';
 import { ThemeToggle } from './ThemeToggle';
 import Link from 'next/link';
-import { Menu, X } from 'lucide-react';
+import { LogOut, Menu, X } from 'lucide-react';
+import { useAuthState } from '@/hooks/useAuthState';
+import { Button } from './Button';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/hooks/useAuth';
 
-const navigationItems = [
-  { href: '/', label: 'Home' },
-  { href: '/tasks', label: 'Tasks' },
-  { href: '/about', label: 'About' },
-] as const;
+const getNavigationItems = (isAuthenticated: boolean) => {
+  const commonItems = [{ href: '/about', label: 'About' }];
+
+  const authItems = [
+    { href: '/dashboard', label: 'Dashboard' },
+    { href: '/tasks', label: 'Tasks' },
+  ];
+
+  return isAuthenticated ? [...authItems, ...commonItems] : commonItems;
+};
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { data: isAuthenticated, isLoading } = useAuthState();
+  const { logout } = useAuth();
+  const router = useRouter();
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
+  const navigationItems = getNavigationItems(isAuthenticated || false);
+
+  const handleLogout = () => {
+    logout();
   };
 
   return (
@@ -38,9 +52,37 @@ const Header = () => {
 
         <div className="flex items-center gap-4">
           <ThemeToggle />
-          {/* Mobile Menu Button */}
+          {!isLoading && (
+            <>
+              {isAuthenticated ? (
+                <Button
+                  variant="outline"
+                  onClick={handleLogout}
+                  className="flex items-center gap-2"
+                >
+                  <LogOut size={16} />
+                  Logout
+                </Button>
+              ) : (
+                <div className="hidden md:flex gap-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => router.push('/auth/signin')}
+                  >
+                    Sign In
+                  </Button>
+                  <Button
+                    variant="primary"
+                    onClick={() => router.push('/auth/signup')}
+                  >
+                    Sign Up
+                  </Button>
+                </div>
+              )}
+            </>
+          )}
           <button
-            onClick={toggleMenu}
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="md:hidden p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
           >
             {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -63,6 +105,41 @@ const Header = () => {
                 </Link>
               </li>
             ))}
+            {isAuthenticated ? (
+              <li>
+                <button
+                  onClick={() => {
+                    handleLogout();
+                    setIsMenuOpen(false);
+                  }}
+                  className="w-full text-left px-6 py-2 font-semibold hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center gap-2"
+                >
+                  <LogOut size={16} />
+                  Logout
+                </button>
+              </li>
+            ) : (
+              <>
+                <li>
+                  <Link
+                    href="/auth/signin"
+                    className="block px-6 py-2 font-semibold hover:bg-gray-200 dark:hover:bg-gray-700"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Sign In
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/auth/signup"
+                    className="block px-6 py-2 font-semibold hover:bg-gray-200 dark:hover:bg-gray-700"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Sign Up
+                  </Link>
+                </li>
+              </>
+            )}
           </ul>
         </nav>
       )}

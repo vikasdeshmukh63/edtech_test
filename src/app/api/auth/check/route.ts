@@ -5,7 +5,7 @@ import { verifyToken } from '../../utils/utils';
 export const runtime = 'nodejs';
 
 export async function GET() {
-  const token = cookies().get('token')?.value;
+  const token = (await cookies()).get('token')?.value;
 
   if (!token) {
     return NextResponse.json({ success: false });

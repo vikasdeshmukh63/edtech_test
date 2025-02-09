@@ -1,16 +1,16 @@
 'use client';
 
-import { FormEvent, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { useAuth } from '@/hooks/useAuth';
-import { Container } from '@/components/Container';
-import { Card } from '@/components/Card';
-import { Input } from '@/components/Input';
 import { Button } from '@/components/Button';
+import { Card } from '@/components/Card';
+import { Container } from '@/components/Container';
+import { Input } from '@/components/Input';
+import { useAuth } from '@/hooks/useAuth';
+import { useAuthRedirect } from '@/hooks/useAuthRedirect';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { FormEvent, useState } from 'react';
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
-import { ThemeToggle } from '@/components/ThemeToggle';
 
 type AuthError = {
   message: string;
@@ -43,6 +43,8 @@ export default function SignUp() {
     password?: string;
   }>({});
   const router = useRouter();
+
+  const { isAuthenticated } = useAuthRedirect();
 
   const { signup, isLoading } = useAuth();
 
@@ -84,9 +86,12 @@ export default function SignUp() {
     }
   };
 
+  if (isAuthenticated) {
+    router.push('/dashboard');
+  }
+
   return (
-    <Container className="flex items-center justify-center h-screen w-full relative">
-      <ThemeToggle className="absolute top-4 right-4" />
+    <Container className="flex items-center justify-center h-screen w-full">
       <Card className="flex justify-between items-center gap-2 flex-col">
         <h1 className="text-center text-2xl font-bold">Sign up</h1>
         <form onSubmit={handleSubmit} className="w-full space-y-4">

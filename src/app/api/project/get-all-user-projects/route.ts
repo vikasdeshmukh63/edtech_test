@@ -15,7 +15,7 @@ export async function GET(req: Request) {
 
     await connectToDatabase();
 
-    const projects = await Project.find({ createdBy: userId });
+    const projects = await Project.find({ createdBy: userId }).select('-__v');
 
     return NextResponse.json<ResponseType>(
       {

@@ -1,11 +1,18 @@
-import { useMutation } from '@tanstack/react-query';
+'use client';
+
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   AuthResponse,
   LoginCredentials,
   RegisterCredentials,
 } from '@/app/api/types/types';
+import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
 
 export const useAuth = () => {
+  const queryClient = useQueryClient();
+  const router = useRouter();
+
   const signupMutation = useMutation({
     mutationFn: async (credentials: RegisterCredentials) => {
       const response = await fetch('/api/auth/signup', {
@@ -22,6 +29,9 @@ export const useAuth = () => {
       }
 
       return response.json() as Promise<AuthResponse>;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['user'] });
     },
   });
 
@@ -42,12 +52,43 @@ export const useAuth = () => {
 
       return response.json() as Promise<AuthResponse>;
     },
+    onSuccess: (data) => {
+      queryClient.setQueryData(['auth'], true);
+      queryClient.setQueryData(['user'], data.user);
+    },
+  });
+
+  const logoutMutation = useMutation({
+    mutationFn: async () => {
+      const response = await fetch('/api/auth/logout', {
+        method: 'POST',
+      });
+      if (!response.ok) {
+        throw new Error('Logout failed');
+      }
+      return response.json();
+    },
+    onSuccess: () => {
+      // Clear all queries from the cache
+      queryClient.clear();
+      // Set auth state to false
+      queryClient.setQueryData(['auth'], false);
+      // Remove user data
+      queryClient.setQueryData(['user'], null);
+      // Redirect to home page
+      router.push('/');
+      toast.success('Logged out successfully');
+    },
   });
 
   return {
     signup: signupMutation.mutate,
     signin: signinMutation.mutate,
-    isLoading: signupMutation.isPending || signinMutation.isPending,
-    error: signupMutation.error || signinMutation.error,
+    logout: logoutMutation.mutate,
+    isLoading:
+      signupMutation.isPending ||
+      signinMutation.isPending ||
+      logoutMutation.isPending,
+    error: signupMutation.error || signinMutation.error || logoutMutation.error,
   };
 };

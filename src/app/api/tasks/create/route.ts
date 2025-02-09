@@ -14,6 +14,7 @@ export async function POST(req: Request) {
       dueDate,
       categoryId,
       projectId,
+      assignedTo,
     }: CreateTask = await req.json();
 
     if (!title || !description || !priority || !dueDate || !categoryId) {
@@ -41,13 +42,15 @@ export async function POST(req: Request) {
       categoryId,
       createdBy: userId,
       projectId,
+      assignedTo,
     });
 
     return NextResponse.json<ResponseType>(
-      { success: true, message: 'Task created successfully', data: task },
+      { success: true, message: 'Task created successfully' },
       { status: 201 }
     );
   } catch (error) {
+    console.log(error);
     return NextResponse.json<ResponseType>(
       { success: false, message: 'Failed to create task' },
       { status: 500 }

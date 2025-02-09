@@ -39,6 +39,11 @@ const taskSchema = new mongoose.Schema(
       ref: 'Category',
       required: true,
     },
+    assignedTo: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
   },
   {
     timestamps: true,

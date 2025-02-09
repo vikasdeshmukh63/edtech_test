@@ -2,25 +2,43 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuthState } from './useAuthState';
 
-export const useAuthRedirect = (redirectTo: string = '/auth/signin') => {
+export const useAuthRedirect = (
+  authenticatedRedirect: string = '/dashboard',
+  unauthenticatedRedirect: string = '/auth/signin'
+) => {
   const router = useRouter();
+  const { data: isAuthenticated, isLoading, isError } = useAuthState();
 
   useEffect(() => {
-    // Make an API call to check auth status
-    const checkAuth = async () => {
-      try {
-        const response = await fetch('/api/auth/check');
-        const data = await response.json();
-
-        if (!data.success) {
-          router.replace(redirectTo);
+    if (!isLoading) {
+      if (isAuthenticated) {
+        // If user is authenticated and trying to access auth pages or home page
+        if (
+          window.location.pathname.startsWith('/auth/') ||
+          window.location.pathname === '/'
+        ) {
+          router.replace(authenticatedRedirect);
         }
-      } catch (error) {
-        router.replace(redirectTo);
+      } else {
+        // If user is not authenticated or there's an auth error
+        if (
+          !window.location.pathname.startsWith('/auth/') &&
+          window.location.pathname !== '/'
+        ) {
+          router.replace(unauthenticatedRedirect);
+        }
       }
-    };
+    }
+  }, [
+    router,
+    isAuthenticated,
+    isLoading,
+    isError,
+    authenticatedRedirect,
+    unauthenticatedRedirect,
+  ]);
 
-    checkAuth();
-  }, [router, redirectTo]);
+  return { isAuthenticated, isLoading, isError };
 };
