@@ -8,14 +8,14 @@ import {
 } from '@/app/api/types/types';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
-
+import { API_ENDPOINTS } from '@/constants/constants';
 export const useAuth = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
 
   const signupMutation = useMutation({
     mutationFn: async (credentials: RegisterCredentials) => {
-      const response = await fetch('/api/auth/signup', {
+      const response = await fetch(API_ENDPOINTS.AUTH_SIGNUP, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -37,7 +37,7 @@ export const useAuth = () => {
 
   const signinMutation = useMutation({
     mutationFn: async (credentials: LoginCredentials) => {
-      const response = await fetch('/api/auth/signin', {
+      const response = await fetch(API_ENDPOINTS.AUTH_SIGNIN, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -60,7 +60,7 @@ export const useAuth = () => {
 
   const logoutMutation = useMutation({
     mutationFn: async () => {
-      const response = await fetch('/api/auth/logout', {
+      const response = await fetch(API_ENDPOINTS.AUTH_LOGOUT, {
         method: 'POST',
       });
       if (!response.ok) {

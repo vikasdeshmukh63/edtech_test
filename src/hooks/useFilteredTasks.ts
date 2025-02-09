@@ -1,6 +1,6 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { Task } from '@/types/types';
-
+import { API_ENDPOINTS } from '@/constants/constants';
 interface FilterParams {
   priority?: string;
   assignedTo?: string;
@@ -30,7 +30,9 @@ export const useFilteredTasks = (filters: FilterParams) => {
       queryParams.append('page', pageParam.toString());
       queryParams.append('limit', '10'); // Number of items per page
 
-      const response = await fetch(`/api/tasks/filtered?${queryParams}`);
+      const response = await fetch(
+        `${API_ENDPOINTS.FILTERED_TASKS}?${queryParams}`
+      );
 
       if (!response.ok) {
         throw new Error('Failed to fetch tasks');

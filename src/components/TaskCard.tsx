@@ -4,6 +4,8 @@ import { Category, Project, Task } from '@/types/types';
 import { useInView } from 'react-intersection-observer';
 import { useEffect } from 'react';
 import { Select } from './Select';
+import { Button } from './Button';
+import { Pencil } from 'lucide-react';
 
 interface TaskCardProps {
   task: Task;
@@ -30,8 +32,6 @@ const TaskCard: React.FC<TaskCardProps> = ({
   selectedTasks, // Changed to selectedTasks
   setSelectedTasks, // Changed to setSelectedTasks
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
   const { ref, inView } = useInView({
     threshold: 0,
     triggerOnce: true,
@@ -48,13 +48,6 @@ const TaskCard: React.FC<TaskCardProps> = ({
     low: 'bg-blue-500',
     medium: 'bg-yellow-500',
     high: 'bg-red-500',
-  };
-
-  // Status-based text colors
-  const statusColors = {
-    pending: 'text-gray-600',
-    in_progress: 'text-blue-600',
-    completed: 'text-green-600',
   };
 
   return (
@@ -83,10 +76,15 @@ const TaskCard: React.FC<TaskCardProps> = ({
             {task.title}
           </h3>
         </span>
-        <span
-          className={`text-sm font-medium ${priorityColors[task.priority as Priority]} px-2 py-1 rounded`}
-        >
-          {task.priority.toUpperCase()}
+        <span className="flex items-center gap-2">
+          <Button variant="outline" className="p-1">
+            <Pencil className="w-4 h-4" />
+          </Button>
+          <span
+            className={`text-sm font-medium ${priorityColors[task.priority as Priority]} px-2 py-1 rounded`}
+          >
+            {task.priority.toUpperCase()}
+          </span>
         </span>
       </div>
 

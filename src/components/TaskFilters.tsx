@@ -5,7 +5,7 @@ import { X } from 'lucide-react';
 import { Input } from './Input';
 import { Select } from './Select';
 import { Project, Category } from '@/types/types';
-
+import { PRIORITY_OPTIONS, STATUS_OPTIONS } from '@/constants/constants';
 interface TaskFiltersProps {
   users: User[];
   categories: Category[];
@@ -108,9 +108,7 @@ export function TaskFilters({
             onChange={handleChange}
             options={[
               { value: '', label: 'All Priorities' },
-              { value: 'low', label: 'Low' },
-              { value: 'medium', label: 'Medium' },
-              { value: 'high', label: 'High' },
+              ...PRIORITY_OPTIONS,
             ]}
           />
 
@@ -121,9 +119,7 @@ export function TaskFilters({
             onChange={handleChange}
             options={[
               { value: '', label: 'All Statuses' },
-              { value: 'pending', label: 'Pending' },
-              { value: 'in_progress', label: 'In Progress' },
-              { value: 'completed', label: 'Completed' },
+              ...STATUS_OPTIONS,
             ]}
           />
 

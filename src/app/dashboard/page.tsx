@@ -5,13 +5,14 @@ import { Container } from '@/components/Container';
 import Loader from '@/components/Loader';
 import TaskCard from '@/components/TaskCard';
 import { TaskFilters } from '@/components/TaskFilters';
+import { TaskModal } from '@/components/TaskModal';
 import { useCategories } from '@/hooks/useCategories';
 import { useFilteredTasks } from '@/hooks/useFilteredTasks';
 import { useProjects } from '@/hooks/useProjects';
 import { useTask } from '@/hooks/useTask';
 import { useUsers } from '@/hooks/useUsers';
 import { Task } from '@/types/types';
-import { Filter, Trash2 } from 'lucide-react';
+import { Filter, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
 export default function Dashboard() {
@@ -27,13 +28,14 @@ export default function Dashboard() {
     projectId: '',
   });
   const [selectedTasks, setSelectedTasks] = useState<string[]>([]);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   const { data: usersData } = useUsers();
   const { data: categoriesData } = useCategories();
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useFilteredTasks(filters);
   const { data: projectsData } = useProjects();
-  const { updateTask, deleteManyTasks } = useTask('all');
+  const { updateTask, deleteManyTasks } = useTask();
 
   const handleLoadMore = () => {
     if (hasNextPage && !isFetchingNextPage) {
@@ -77,6 +79,14 @@ export default function Dashboard() {
             </Button>
           )}
           <Button
+            variant="primary"
+            className="flex items-center gap-2"
+            onClick={() => setIsCreateModalOpen(true)}
+          >
+            <Plus />
+            Create Task
+          </Button>
+          <Button
             onClick={() => setIsFilterOpen(true)}
             variant="outline"
             className="flex items-center gap-2"
@@ -106,6 +116,11 @@ export default function Dashboard() {
         }
         isOpen={isFilterOpen}
         onClose={() => setIsFilterOpen(false)}
+      />
+
+      <TaskModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
       />
 
       {hasNoTasks ? (

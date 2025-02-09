@@ -18,10 +18,13 @@ export async function POST(req: Request) {
     }: CreateTask = await req.json();
 
     if (!title || !description || !priority || !dueDate || !categoryId) {
-      return NextResponse.json<ResponseType>({
-        success: false,
-        message: 'All fields are required',
-      });
+      return NextResponse.json<ResponseType>(
+        {
+          success: false,
+          message: 'All fields are required',
+        },
+        { status: 400 }
+      );
     }
 
     const userId = req.headers.get('x-user-id');

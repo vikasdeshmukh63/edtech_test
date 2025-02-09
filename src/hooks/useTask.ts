@@ -1,7 +1,7 @@
 import { CreateTask, UpdateTask } from '@/app/api/types/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
-export const useTask = (queryType?: 'all' | 'user') => {
+export const useTask = () => {
   const queryClient = useQueryClient();
 
   // Add getAllTasks query
@@ -15,7 +15,6 @@ export const useTask = (queryType?: 'all' | 'user') => {
       }
       return await response.json();
     },
-    enabled: queryType === 'all',
   });
 
   // Add getTask query
@@ -29,7 +28,6 @@ export const useTask = (queryType?: 'all' | 'user') => {
       }
       return await response.json();
     },
-    enabled: queryType === 'user',
   });
 
   const createTaskMutation = useMutation({
@@ -50,12 +48,13 @@ export const useTask = (queryType?: 'all' | 'user') => {
       return await response.json();
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['filtered-tasks'] });
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
       queryClient.invalidateQueries({ queryKey: ['user-tasks'] });
       toast.success('Task created successfully');
     },
-    onError: () => {
-      toast.error('Task creation failed');
+    onError: (error) => {
+      toast.error(error.message || 'Task creation failed');
     },
   });
 
