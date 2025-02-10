@@ -14,7 +14,7 @@ import { useProjects } from '@/hooks/useProjects';
 import { useTask } from '@/hooks/useTask';
 import { useUsers } from '@/hooks/useUsers';
 import { Task } from '@/types/types';
-import { Filter, FolderX, Plus, Trash2 } from 'lucide-react';
+import { Filter, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
 export default function Dashboard() {

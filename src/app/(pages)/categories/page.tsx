@@ -1,16 +1,16 @@
 'use client';
 
 import { Button } from '@/components/Button';
-import { Container } from '@/components/Container';
-import { Pencil, Plus, Trash2 } from 'lucide-react';
-import React, { useState } from 'react';
+import CategoryCard from '@/components/CategoryCard';
 import CategoryModal from '@/components/CategoryModal';
+import { Container } from '@/components/Container';
+import Loader from '@/components/Loader';
+import NoData from '@/components/NoData';
+import { useAuthRedirect } from '@/hooks/useAuthRedirect';
 import { useCategories } from '@/hooks/useCategories';
 import { Category } from '@/types/types';
-import Loader from '@/components/Loader';
-import CategoryCard from '@/components/CategoryCard';
-import { useAuthRedirect } from '@/hooks/useAuthRedirect';
-import NoData from '@/components/NoData';
+import { Plus, Trash2 } from 'lucide-react';
+import { useState } from 'react';
 
 const CategoriesPage = () => {
   const { isAuthenticated } = useAuthRedirect();

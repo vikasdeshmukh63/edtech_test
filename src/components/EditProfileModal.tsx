@@ -1,9 +1,9 @@
+import { useProfile } from '@/hooks/useProfile';
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
+import * as yup from 'yup';
 import { Button } from './Button';
 import { Input } from './Input';
-import * as yup from 'yup';
-import { toast } from 'react-toastify';
-import { useProfile } from '@/hooks/useProfile';
 
 interface EditProfileModalProps {
   isOpen: boolean;

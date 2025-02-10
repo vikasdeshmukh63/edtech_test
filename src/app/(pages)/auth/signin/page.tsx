@@ -28,8 +28,10 @@ const signInSchema = yup.object().shape({
 });
 
 export default function SignIn() {
+  // redirecting to dashboard if user is authenticated
   const { isAuthenticated } = useAuthRedirect();
 
+  // states
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -38,17 +40,23 @@ export default function SignIn() {
     email?: string;
     password?: string;
   }>({});
+
+  // router
   const router = useRouter();
 
+  // auth hok
   const { signin, isLoading } = useAuth();
 
+  //handle submit function to handle form submission
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrors({});
 
     try {
+      // validating the form data
       await signInSchema.validate(formData, { abortEarly: false });
 
+      // signin function to signin the user
       signin(
         {
           email: formData.email,
@@ -69,6 +77,7 @@ export default function SignIn() {
         }
       );
     } catch (err: unknown) {
+      // if validation error is there
       if (err instanceof yup.ValidationError) {
         const fieldErrors: { [key: string]: string } = {};
         err.inner.forEach((error) => {
@@ -83,6 +92,7 @@ export default function SignIn() {
     }
   };
 
+  // if authencated user
   if (isAuthenticated) {
     return null;
   }
@@ -90,8 +100,11 @@ export default function SignIn() {
   return (
     <Container className="flex items-center justify-center h-screen w-full">
       <Card className="flex justify-between items-center gap-2 flex-col">
+        {/* heading  */}
         <h1 className="text-center text-2xl font-bold">Signin</h1>
+        {/* form */}
         <form onSubmit={handleSubmit} className="w-full space-y-4">
+          {/* email  */}
           <Input
             label="Email"
             value={formData.email}

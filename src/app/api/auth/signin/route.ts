@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { AuthResponse, LoginCredentials } from '../../types/types';
 import connectToDatabase from '../../db/db';
 import User from '../../models/user';
-import { comparePasswords, generateToken } from '../../utils/utils';
+import { verifyPassword, generateToken } from '../../utils/utils';
 import { errorHandler } from '../../utils/errorHandler';
 import { BadRequestError, UnauthorizedError } from '../../utils/errors';
 
@@ -23,7 +23,7 @@ export const POST = errorHandler(async (request: NextRequest) => {
     throw new UnauthorizedError('Invalid credentials');
   }
 
-  const isPasswordValid = await comparePasswords(password, user.password);
+  const isPasswordValid = await verifyPassword(password, user.password);
 
   if (!isPasswordValid) {
     throw new UnauthorizedError('Invalid credentials');

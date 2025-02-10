@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import { PRIORITY_OPTIONS } from '@/constants/constants';
+import { useTask } from '@/hooks/useTask';
+import { Category, Project, Task, User } from '@/types/types';
+import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import * as yup from 'yup';
 import { Button } from './Button';
 import { Input } from './Input';
 import { Select } from './Select';
-import { useTask } from '@/hooks/useTask';
-import { toast } from 'react-toastify';
-import { Category, Project, User, Task } from '@/types/types';
-import { PRIORITY_OPTIONS } from '@/constants/constants';
-import * as yup from 'yup';
 
 interface TaskModalProps {
   isOpen: boolean;

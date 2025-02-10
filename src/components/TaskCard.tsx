@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import { Category, Project, Task, User } from '@/types/types';
-import { useInView } from 'react-intersection-observer';
-import { useEffect } from 'react';
-import { Select } from './Select';
-import { Button } from './Button';
 import { Pencil } from 'lucide-react';
+import { useEffect } from 'react';
+import { useInView } from 'react-intersection-observer';
+import { Button } from './Button';
+import { Select } from './Select';
 
 interface TaskCardProps {
   task: Task;

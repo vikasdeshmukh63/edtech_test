@@ -1,14 +1,15 @@
 'use client';
 
-import React, { useState } from 'react';
 import { Button } from '@/components/Button';
 import { Container } from '@/components/Container';
-import Loader from '@/components/Loader';
-import { useProfile } from '@/hooks/useProfile';
-import { Pencil } from 'lucide-react';
 import EditProfileModal from '@/components/EditProfileModal';
+import Loader from '@/components/Loader';
 import ResetPasswordModal from '@/components/ResetPasswordModal';
 import { useAuthRedirect } from '@/hooks/useAuthRedirect';
+import { useProfile } from '@/hooks/useProfile';
+import { Pencil } from 'lucide-react';
+import { useState } from 'react';
+
 const ProfilePage = () => {
   const { getProfile } = useProfile();
   const { isAuthenticated } = useAuthRedirect();

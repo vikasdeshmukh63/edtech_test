@@ -23,13 +23,12 @@ export const errorHandler = (fn: ErrorHandlerFunction) => {
           { status: error.statusCode }
         );
       }
-
       // Handle mongoose validation errors
-      if (error.name === 'ValidationError') {
+      if ((error as any).name === 'ValidationError') {
         return NextResponse.json<ResponseType>(
           {
             success: false,
-            message: Object.values(error.errors)
+            message: Object.values((error as any).errors)
               .map((err: any) => err.message)
               .join(', '),
           },
@@ -38,7 +37,7 @@ export const errorHandler = (fn: ErrorHandlerFunction) => {
       }
 
       // Handle mongoose duplicate key errors
-      if (error.code === 11000) {
+      if ((error as any).code === 11000) {
         return NextResponse.json<ResponseType>(
           {
             success: false,

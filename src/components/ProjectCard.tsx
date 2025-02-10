@@ -1,7 +1,7 @@
-import React from 'react';
 import { Project } from '@/types/types';
-import { Button } from './Button';
 import { Pencil } from 'lucide-react';
+import React from 'react';
+import { Button } from './Button';
 
 const ProjectCard = ({
   project,

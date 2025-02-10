@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useCategories } from '@/hooks/useCategories';
+import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import { Button } from './Button';
 import { Input } from './Input';
-import { useCategories } from '@/hooks/useCategories';
-import { toast } from 'react-toastify';
 
 interface CategoryModalProps {
   isOpen: boolean;

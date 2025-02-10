@@ -2,15 +2,15 @@
 
 import { Button } from '@/components/Button';
 import { Container } from '@/components/Container';
-import { Pencil, Plus, Trash2 } from 'lucide-react';
-import React, { useState } from 'react';
+import Loader from '@/components/Loader';
+import NoData from '@/components/NoData';
+import ProjectCard from '@/components/ProjectCard';
 import ProjectModal from '@/components/ProjectModal';
+import { useAuthRedirect } from '@/hooks/useAuthRedirect';
 import { useProjects } from '@/hooks/useProjects';
 import { Project } from '@/types/types';
-import Loader from '@/components/Loader';
-import ProjectCard from '@/components/ProjectCard';
-import { useAuthRedirect } from '@/hooks/useAuthRedirect';
-import NoData from '@/components/NoData';
+import { Plus, Trash2 } from 'lucide-react';
+import { useState } from 'react';
 
 const ProjectsPage = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);

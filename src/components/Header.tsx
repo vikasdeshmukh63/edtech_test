@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
-import { ThemeToggle } from './ThemeToggle';
-import Link from 'next/link';
-import { CircleUserRound, LogOut, Menu, X } from 'lucide-react';
-import { useAuthState } from '@/hooks/useAuthState';
-import { Button } from './Button';
-import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
+import { useAuthState } from '@/hooks/useAuthState';
+import { CircleUserRound, LogOut, Menu, X } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { Button } from './Button';
+import { ThemeToggle } from './ThemeToggle';
 
 const getNavigationItems = (isAuthenticated: boolean) => {
   const commonItems = [{ href: '/about', label: 'About' }];
