@@ -9,7 +9,7 @@ export async function DELETE(req: NextRequest) {
 
     const userId = req.headers.get('x-user-id');
     if (!userId) {
-      return NextResponse.json(
+      return NextResponse.json<ResponseType>(
         { success: false, message: 'User not authenticated' },
         { status: 401 }
       );

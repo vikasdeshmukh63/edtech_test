@@ -22,7 +22,7 @@ export async function DELETE(
     if (!userId) {
       return NextResponse.json<ResponseType>(
         { success: false, message: 'User not authenticated' },
-        { status: 401 }
+        { status: 403 }
       );
     }
 

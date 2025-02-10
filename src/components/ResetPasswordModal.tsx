@@ -40,8 +40,9 @@ const ResetPasswordModal: React.FC<ResetPasswordModalProps> = ({
 
     try {
       await passwordSchema.validate(formData, { abortEarly: false });
-      resetPassword({
-        oldPassword: formData.oldPassword,
+      resetPassword(
+        {
+          oldPassword: formData.oldPassword,
           newPassword: formData.newPassword,
         },
         {

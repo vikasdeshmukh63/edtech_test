@@ -8,25 +8,34 @@ export async function GET(req: Request) {
     const userId = req.headers.get('x-user-id');
 
     if (!userId) {
-      return NextResponse.json<ResponseType>({
-        success: false,
-        message: 'User not authenticated',
-      });
+      return NextResponse.json<ResponseType>(
+        {
+          success: false,
+          message: 'User not authenticated',
+        },
+        { status: 401 }
+      );
     }
 
     await connectToDatabase();
 
     const users = await User.find().select('-password -__v');
 
-    return NextResponse.json<ResponseType>({
-      success: true,
-      message: 'Users fetched successfully',
-      data: users,
-    });
+    return NextResponse.json<ResponseType>(
+      {
+        success: true,
+        message: 'Users fetched successfully',
+        data: users,
+      },
+      { status: 200 }
+    );
   } catch (error) {
-    return NextResponse.json<ResponseType>({
-      success: false,
-      message: 'Failed to fetch users',
-    });
+    return NextResponse.json<ResponseType>(
+      {
+        success: false,
+        message: 'Failed to fetch users',
+      },
+      { status: 500 }
+    );
   }
 }

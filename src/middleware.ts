@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { verifyToken } from './app/api/utils/utils';
+import { ResponseType } from './app/api/types/types';
 
 export const config = {
   matcher: ['/api/:path*'],
@@ -19,7 +20,7 @@ export async function middleware(request: NextRequest) {
     const token = tokenCookie?.value;
 
     if (!token) {
-      return NextResponse.json(
+      return NextResponse.json<ResponseType>(
         { success: false, message: 'Authentication required' },
         { status: 401 }
       );
@@ -29,7 +30,7 @@ export async function middleware(request: NextRequest) {
       const decoded = await verifyToken(token);
 
       if (!decoded || !decoded.userId) {
-        return NextResponse.json(
+        return NextResponse.json<ResponseType>(
           { success: false, message: 'Invalid token' },
           { status: 401 }
         );
@@ -44,7 +45,7 @@ export async function middleware(request: NextRequest) {
         },
       });
     } catch (error) {
-      return NextResponse.json(
+      return NextResponse.json<ResponseType>(
         { success: false, message: 'Invalid token' },
         { status: 401 }
       );

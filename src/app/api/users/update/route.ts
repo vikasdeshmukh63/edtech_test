@@ -10,7 +10,8 @@ export async function PUT(req: Request) {
     const userId = req.headers.get('x-user-id');
 
     if (!userId) {
-      return NextResponse.json<ResponseType>({
+      return NextResponse.json<ResponseType>(
+        {
           success: false,
           message: 'User not authenticated',
         },
@@ -27,26 +28,29 @@ export async function PUT(req: Request) {
     );
 
     if (!user) {
-      return NextResponse.json<ResponseType>({
-        success: false,
-        message: 'User not found',
-      },
+      return NextResponse.json<ResponseType>(
+        {
+          success: false,
+          message: 'User not found',
+        },
         { status: 404 }
       );
     }
 
-    return NextResponse.json<ResponseType>({
-      success: true,
-      message: 'User updated successfully',
-      data: user,
-    },
+    return NextResponse.json<ResponseType>(
+      {
+        success: true,
+        message: 'User updated successfully',
+        data: user,
+      },
       { status: 200 }
     );
   } catch (error) {
-    return NextResponse.json<ResponseType>({
-      success: false,
-      message: 'Failed to update user',
-    },
+    return NextResponse.json<ResponseType>(
+      {
+        success: false,
+        message: 'Failed to update user',
+      },
       { status: 500 }
     );
   }

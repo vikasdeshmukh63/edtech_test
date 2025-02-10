@@ -42,7 +42,7 @@ export async function PUT(
     await connectToDatabase();
 
     // Only update the fields that are provided
-    const task = await Task.findByIdAndUpdate(
+    await Task.findByIdAndUpdate(
       params.id,
       { $set: updateData },
       { new: true }

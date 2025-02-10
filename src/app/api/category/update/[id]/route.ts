@@ -11,14 +11,14 @@ export async function PUT(
     const { name } = await req.json();
 
     if (!name) {
-      return NextResponse.json(
+      return NextResponse.json<ResponseType>(
         { success: false, message: 'Name is required' },
         { status: 400 }
       );
     }
 
     if (!params.id) {
-      return NextResponse.json(
+      return NextResponse.json<ResponseType>(
         { success: false, message: 'Category ID is required' },
         { status: 400 }
       );
@@ -27,7 +27,7 @@ export async function PUT(
     const userId = req.headers.get('x-user-id');
 
     if (!userId) {
-      return NextResponse.json(
+      return NextResponse.json<ResponseType>(
         { success: false, message: 'User not authenticated' },
         { status: 401 }
       );
@@ -42,7 +42,7 @@ export async function PUT(
     );
 
     if (!category) {
-      return NextResponse.json(
+      return NextResponse.json<ResponseType>(
         { success: false, message: 'Category not found' },
         { status: 404 }
       );

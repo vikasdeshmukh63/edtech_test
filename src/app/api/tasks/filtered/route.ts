@@ -7,6 +7,9 @@ interface TaskQuery {
   priority?: string;
   assignedTo?: string;
   status?: string;
+  categoryId?: string;
+  projectId?: string;
+  search?: string;
   dueDate?: {
     $gte?: Date;
     $lte?: Date;
@@ -45,7 +48,7 @@ export async function GET(req: Request) {
     await connectToDatabase();
 
     // Build query
-    const query: any = {};
+    const query: TaskQuery = {};
 
     // Add filters only if they have values
     if (priority) query.priority = priority;

@@ -1,7 +1,7 @@
-import { NextResponse } from 'next/server';
 import Project from '../../models/project';
 import { CreateProject, ResponseType } from '../../types/types';
 import connectToDatabase from '../../db/db';
+import { NextResponse } from 'next/server';
 
 export const runtime = 'nodejs';
 
@@ -10,7 +10,7 @@ export async function POST(req: Request) {
     const { title, description }: CreateProject = await req.json();
 
     if (!title || !description) {
-      return NextResponse.json(
+      return NextResponse.json<ResponseType>(
         { success: false, message: 'All fields are required' },
         { status: 400 }
       );
