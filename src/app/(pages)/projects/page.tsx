@@ -13,15 +13,28 @@ import { Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
 const ProjectsPage = () => {
+  // check if user is authenticated
+  const { isAuthenticated } = useAuthRedirect();
+
+  // states
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [selectedProjects, setSelectedProjects] = useState<string[]>([]);
   const [editProject, setEditProject] = useState<Project | null>(null);
+
+  // projects hook
   const { getAllProjects, deleteManyProjects, isLoading } = useProjects();
   const { data: projectsData } = getAllProjects;
-  const { isAuthenticated } = useAuthRedirect();
 
+  // if loading
+  if (isLoading) return <Loader className="w-full h-screen" />;
+
+  // if not authenticated
+  if (!isAuthenticated) return null;
+
+  // has no projects
   const hasNoProjects = !projectsData?.data.length;
 
+  // handle delete many projects
   const handleDeleteManyProjects = () => {
     deleteManyProjects(selectedProjects, {
       onSuccess: () => {
@@ -30,10 +43,12 @@ const ProjectsPage = () => {
     });
   };
 
+  // if laoding
   if (isLoading) {
     return <Loader className="w-full h-screen" />;
   }
 
+  // if not authenticated
   if (!isAuthenticated) {
     return null;
   }
@@ -41,8 +56,10 @@ const ProjectsPage = () => {
   return (
     <Container className="py-6">
       <div className="flex justify-between items-center mb-6">
+        {/* heading  */}
         <h1 className="text-2xl font-bold">Projects</h1>
         <div className="flex items-center gap-2">
+          {/* delete button  */}
           {selectedProjects.length > 0 && (
             <Button
               variant="danger"
@@ -52,6 +69,7 @@ const ProjectsPage = () => {
               <Trash2 />
             </Button>
           )}
+          {/* create button  */}
           <Button
             variant="primary"
             className="flex items-center gap-2"
@@ -62,9 +80,11 @@ const ProjectsPage = () => {
           </Button>
         </div>
       </div>
+      {/* no projects  */}
       {hasNoProjects ? (
         <NoData title="No projects available" />
       ) : (
+        // projects present
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
           {projectsData?.data.map((project: Project) => (
             <ProjectCard
@@ -78,6 +98,7 @@ const ProjectsPage = () => {
           ))}
         </div>
       )}
+      {/* create modal  */}
       {isCreateModalOpen && (
         <ProjectModal
           isOpen={isCreateModalOpen}

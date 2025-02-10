@@ -16,6 +16,7 @@ type AuthError = {
   message: string;
 };
 
+// validation schema
 const signUpSchema = yup.object().shape({
   name: yup
     .string()
@@ -32,6 +33,10 @@ const signUpSchema = yup.object().shape({
 });
 
 export default function SignUp() {
+  // redirecting to dashboard if user is authenticated
+  const { isAuthenticated } = useAuthRedirect();
+
+  //states
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -42,19 +47,23 @@ export default function SignUp() {
     email?: string;
     password?: string;
   }>({});
+
+  // router
   const router = useRouter();
 
-  const { isAuthenticated } = useAuthRedirect();
-
+  // auth hook
   const { signup, isLoading } = useAuth();
 
+  // to handle form submitssion
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrors({});
 
     try {
+      // validating form data
       await signUpSchema.validate(formData, { abortEarly: false });
 
+      // signup function
       signup(
         {
           name: formData.name,
@@ -72,6 +81,7 @@ export default function SignUp() {
         }
       );
     } catch (err: unknown) {
+      // if there is a validatino error
       if (err instanceof yup.ValidationError) {
         const fieldErrors: { [key: string]: string } = {};
         err.inner.forEach((error) => {
@@ -86,6 +96,7 @@ export default function SignUp() {
     }
   };
 
+  // if authenticated user
   if (isAuthenticated) {
     return null;
   }
@@ -93,8 +104,11 @@ export default function SignUp() {
   return (
     <Container className="flex items-center justify-center h-screen w-full">
       <Card className="flex justify-between items-center gap-2 flex-col">
+        {/* heading  */}
         <h1 className="text-center text-2xl font-bold">Sign up</h1>
+        {/* form */}
         <form onSubmit={handleSubmit} className="w-full space-y-4">
+          {/* name  */}
           <Input
             label="Name"
             value={formData.name}
@@ -104,6 +118,7 @@ export default function SignUp() {
             placeholder="Enter your name"
             error={errors.name}
           />
+          {/* email  */}
           <Input
             label="Email"
             type="email"
@@ -116,6 +131,7 @@ export default function SignUp() {
             error={errors.email}
             placeholder="Enter your email"
           />
+          {/* password  */}
           <Input
             label="Password"
             type="password"
@@ -128,16 +144,19 @@ export default function SignUp() {
             error={errors.password}
             placeholder="Enter your password"
           />
+          {/* submit button  */}
           <Button type="submit" className="w-full" isLoading={isLoading}>
             Sign up
           </Button>
 
+          {/* horizontal rule  */}
           <div className="flex items-center gap-2 justify-center my-4">
             <hr className="w-full border-gray-300 dark:border-gray-600" />
             <span className="text-gray-500 dark:text-gray-400">OR</span>
             <hr className="w-full border-gray-300 dark:border-gray-600" />
           </div>
 
+          {/* redirect to signin section  */}
           <div className="text-center">
             <Link
               href="/auth/signin"

@@ -13,13 +13,19 @@ import { Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
 const CategoriesPage = () => {
+  // checking for authentication
   const { isAuthenticated } = useAuthRedirect();
+
+  //states
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [editCategory, setEditCategory] = useState<Category | null>(null);
+
+  // category hook
   const { getAllCategories, deleteManyCategories, isLoading } = useCategories();
   const { data: categoriesData } = getAllCategories;
 
+  // funtion to handle delete categories
   const handleDeleteManyCategories = () => {
     deleteManyCategories(selectedCategories, {
       onSuccess: () => {
@@ -28,12 +34,15 @@ const CategoriesPage = () => {
     });
   };
 
+  // checking for categories are there or not
   const hasNoCategories = !categoriesData?.data.length;
 
+  // if loading
   if (isLoading) {
     return <Loader className="w-full h-screen" />;
   }
 
+  // if user not authenticated
   if (!isAuthenticated) {
     return null;
   }
@@ -41,8 +50,10 @@ const CategoriesPage = () => {
   return (
     <Container className="py-6">
       <div className="flex justify-between items-center mb-6">
+        {/* heading  */}
         <h1 className="text-2xl font-bold">Categories</h1>
         <div className="flex items-center gap-2">
+          {/* delete button  */}
           {selectedCategories.length > 0 && (
             <Button
               variant="danger"
@@ -52,6 +63,7 @@ const CategoriesPage = () => {
               <Trash2 />
             </Button>
           )}
+          {/* create button  */}
           <Button
             variant="primary"
             className="flex items-center gap-2"
@@ -62,9 +74,11 @@ const CategoriesPage = () => {
           </Button>
         </div>
       </div>
+      {/* if no categories are there  */}
       {hasNoCategories ? (
         <NoData title="No categories available" />
       ) : (
+        // when categories are available
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
           {categoriesData?.data.map((category: Category) => (
             <CategoryCard
@@ -78,6 +92,8 @@ const CategoriesPage = () => {
           ))}
         </div>
       )}
+
+      {/* category modal  */}
       {isCreateModalOpen && (
         <CategoryModal
           isOpen={isCreateModalOpen}

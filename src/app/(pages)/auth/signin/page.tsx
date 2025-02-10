@@ -16,6 +16,7 @@ type AuthError = {
   message: string;
 };
 
+// validation scema
 const signInSchema = yup.object().shape({
   email: yup
     .string()
@@ -47,7 +48,7 @@ export default function SignIn() {
   // auth hok
   const { signin, isLoading } = useAuth();
 
-  //handle submit function to handle form submission
+  // to handle form submission
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrors({});
@@ -116,6 +117,7 @@ export default function SignIn() {
             disabled={isLoading}
             error={errors.email}
           />
+          {/* password  */}
           <Input
             label="Password"
             type="password"
@@ -128,16 +130,18 @@ export default function SignIn() {
             disabled={isLoading}
             error={errors.password}
           />
+          {/* submit button  */}
           <Button type="submit" className="w-full" isLoading={isLoading}>
             Sign in
           </Button>
-
+          {/* hrozontal rule */}
           <div className="flex items-center gap-2 justify-center my-4">
             <hr className="w-full border-gray-300 dark:border-gray-600" />
             <span className="text-gray-500 dark:text-gray-400">OR</span>
             <hr className="w-full border-gray-300 dark:border-gray-600" />
           </div>
 
+          {/* redicret to signup section  */}
           <div className="text-center">
             <Link
               href="/auth/signup"

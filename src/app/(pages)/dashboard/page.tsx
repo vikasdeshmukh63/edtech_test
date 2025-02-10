@@ -18,7 +18,10 @@ import { Filter, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
 export default function Dashboard() {
+  // redirecting to dashboard if user is authenticated
   const { isAuthenticated } = useAuthRedirect();
+
+  // states
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [task, setTask] = useState<Task | null>(null);
@@ -35,21 +38,28 @@ export default function Dashboard() {
   const [selectedTasks, setSelectedTasks] = useState<string[]>([]);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
+  // users hook
   const { data: usersData } = useUsers();
+  // categories hook
   const { getAllCategories } = useCategories();
   const { data: categoriesData } = getAllCategories;
+  // filter hook
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useFilteredTasks(filters);
+  // project hook
   const { getAllProjects } = useProjects();
   const { data: projectsData } = getAllProjects;
+  // task hook
   const { updateTask, deleteManyTasks } = useTask();
 
+  // function to handle loading next tasks
   const handleLoadMore = () => {
     if (hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
   };
 
+  // funtion to handle upating task
   const handleUpdateTask = (updates: Partial<Task>, task: Task) => {
     updateTask({
       ...task,
@@ -61,6 +71,7 @@ export default function Dashboard() {
     });
   };
 
+  // funtion to handle delete tasks
   const handleDeleteManyTasks = () => {
     deleteManyTasks(selectedTasks, {
       onSuccess: () => {
@@ -69,21 +80,26 @@ export default function Dashboard() {
     });
   };
 
+  // if loading
   if (isLoading) {
     return <Loader className="w-full h-screen" />;
   }
 
+  // if not authenticated
   if (!isAuthenticated) {
     return null;
   }
 
+  // checkign that there are task are not
   const hasNoTasks = !data?.pages[0]?.tasks.length;
 
   return (
     <Container className="py-6">
       <div className="flex justify-between items-center mb-6">
+        {/* heading  */}
         <h1 className="text-2xl font-bold">Tasks</h1>
         <div className="flex items-center gap-2">
+          {/* delete button  */}
           {selectedTasks.length > 0 && (
             <Button
               variant="danger"
@@ -93,6 +109,7 @@ export default function Dashboard() {
               <Trash2 />
             </Button>
           )}
+          {/* create button  */}
           <Button
             variant="primary"
             className="flex items-center gap-2"
@@ -101,6 +118,7 @@ export default function Dashboard() {
             <Plus />
             Create Task
           </Button>
+          {/* filter button  */}
           <Button
             onClick={() => setIsFilterOpen(true)}
             variant="outline"
@@ -112,6 +130,7 @@ export default function Dashboard() {
         </div>
       </div>
 
+      {/* filter modal  */}
       {isFilterOpen && (
         <TaskFilters
           users={usersData?.data || []}
@@ -135,6 +154,7 @@ export default function Dashboard() {
         />
       )}
 
+      {/* create modal  */}
       {isCreateModalOpen && (
         <TaskModal
           isOpen={isCreateModalOpen}
@@ -145,6 +165,7 @@ export default function Dashboard() {
         />
       )}
 
+      {/* edit modal  */}
       {isEditModalOpen && (
         <TaskModal
           isOpen={isEditModalOpen}
@@ -156,9 +177,11 @@ export default function Dashboard() {
         />
       )}
 
+      {/* no tasks  */}
       {hasNoTasks ? (
         <NoData title="No tasks available" />
       ) : (
+        // tasks presennt
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {data?.pages.map((page, pageIndex) =>
             page.tasks.map((task, taskIndex) => (
@@ -184,6 +207,7 @@ export default function Dashboard() {
         </div>
       )}
 
+      {/* loader for more tasks  */}
       {isFetchingNextPage && (
         <div className="w-full h-fit flex justify-center items-center">
           <Loader className="w-full h-fit" />
