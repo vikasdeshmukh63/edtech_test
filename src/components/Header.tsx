@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { ThemeToggle } from './ThemeToggle';
 import Link from 'next/link';
-import { LogOut, Menu, X } from 'lucide-react';
+import { CircleUserRound, LogOut, Menu, X } from 'lucide-react';
 import { useAuthState } from '@/hooks/useAuthState';
 import { Button } from './Button';
 import { useRouter } from 'next/navigation';
@@ -14,7 +14,8 @@ const getNavigationItems = (isAuthenticated: boolean) => {
 
   const authItems = [
     { href: '/dashboard', label: 'Dashboard' },
-    { href: '/tasks', label: 'Tasks' },
+    { href: '/categories', label: 'Categories' },
+    { href: '/projects', label: 'Projects' },
   ];
 
   return isAuthenticated ? [...authItems, ...commonItems] : commonItems;
@@ -55,14 +56,22 @@ const Header = () => {
           {!isLoading && (
             <>
               {isAuthenticated ? (
-                <Button
-                  variant="outline"
-                  onClick={handleLogout}
-                  className="flex items-center gap-2"
-                >
-                  <LogOut size={16} />
-                  Logout
-                </Button>
+                <>
+                  <Button
+                    variant="outline"
+                    onClick={handleLogout}
+                    className="flex items-center gap-2"
+                  >
+                    <LogOut size={16} />
+                    Logout
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => router.push('/profile')}
+                  >
+                    <CircleUserRound />
+                  </Button>
+                </>
               ) : (
                 <div className="hidden md:flex gap-2">
                   <Button

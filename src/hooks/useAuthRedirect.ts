@@ -25,7 +25,9 @@ export const useAuthRedirect = (
         // If user is not authenticated or there's an auth error
         if (
           !window.location.pathname.startsWith('/auth/') &&
-          window.location.pathname !== '/'
+          window.location.pathname !== '/' &&
+          window.location.pathname !== '/projects' &&
+          window.location.pathname !== '/categories'
         ) {
           router.replace(unauthenticatedRedirect);
         }

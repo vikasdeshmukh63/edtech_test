@@ -33,10 +33,12 @@ export default function Dashboard() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   const { data: usersData } = useUsers();
-  const { data: categoriesData } = useCategories();
+  const { getAllCategories } = useCategories();
+  const { data: categoriesData } = getAllCategories;
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useFilteredTasks(filters);
-  const { data: projectsData } = useProjects();
+  const { getAllProjects } = useProjects();
+  const { data: projectsData } = getAllProjects;
   const { updateTask, deleteManyTasks } = useTask();
 
   const handleLoadMore = () => {
@@ -49,6 +51,7 @@ export default function Dashboard() {
     updateTask({
       ...task,
       ...updates,
+      dueDate: task.dueDate.toISOString(),
     });
   };
 

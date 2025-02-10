@@ -59,7 +59,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
       ref={isLastItem ? ref : undefined}
       className={`
       rounded-lg p-4 shadow-md hover:shadow-lg hover:dark:shadow-gray-500/50 transition-shadow
-      cursor-pointer mb-4 w-full max-w-md bg-white dark:bg-gray-800
+      cursor-pointer mb-4 w-full max-w-md bg-white dark:bg-gray-800 border
     `}
     >
       <div className="flex justify-between items-start">
@@ -92,7 +92,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
             <Pencil className="w-4 h-4" />
           </Button>
           <span
-            className={`text-sm font-medium ${priorityColors[task.priority as Priority]} px-2 py-1 rounded`}
+            className={`text-sm font-medium text-white ${priorityColors[task.priority as Priority]} px-2 py-1 rounded`}
           >
             {task.priority.toUpperCase()}
           </span>

@@ -92,6 +92,7 @@ export default function SignIn() {
             onChange={(e) =>
               setFormData({ ...formData, email: e.target.value })
             }
+            placeholder="Enter your email"
             disabled={isLoading}
             error={errors.email}
           />
@@ -103,6 +104,7 @@ export default function SignIn() {
             onChange={(e) =>
               setFormData({ ...formData, password: e.target.value })
             }
+            placeholder="Enter your password"
             disabled={isLoading}
             error={errors.password}
           />

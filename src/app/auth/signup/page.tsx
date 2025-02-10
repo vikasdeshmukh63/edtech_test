@@ -101,6 +101,7 @@ export default function SignUp() {
             className="p-2"
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             disabled={isLoading}
+            placeholder="Enter your name"
             error={errors.name}
           />
           <Input
@@ -113,6 +114,7 @@ export default function SignUp() {
             }
             disabled={isLoading}
             error={errors.email}
+            placeholder="Enter your email"
           />
           <Input
             label="Password"
@@ -124,6 +126,7 @@ export default function SignUp() {
             }
             disabled={isLoading}
             error={errors.password}
+            placeholder="Enter your password"
           />
           <Button type="submit" className="w-full" isLoading={isLoading}>
             Sign up
