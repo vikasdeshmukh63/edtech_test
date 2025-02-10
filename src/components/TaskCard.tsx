@@ -17,6 +17,8 @@ interface TaskCardProps {
   categories: Category[];
   selectedTasks: string[]; // Changed to an array of strings
   setSelectedTasks: React.Dispatch<React.SetStateAction<string[]>>; // Updated type
+  setIsEditModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setTask: React.Dispatch<React.SetStateAction<Task | null>>;
 }
 
 type Priority = 'low' | 'medium' | 'high';
@@ -31,6 +33,8 @@ const TaskCard: React.FC<TaskCardProps> = ({
   onLastItemInView,
   selectedTasks, // Changed to selectedTasks
   setSelectedTasks, // Changed to setSelectedTasks
+  setIsEditModalOpen,
+  setTask,
 }) => {
   const { ref, inView } = useInView({
     threshold: 0,
@@ -77,7 +81,14 @@ const TaskCard: React.FC<TaskCardProps> = ({
           </h3>
         </span>
         <span className="flex items-center gap-2">
-          <Button variant="outline" className="p-1">
+          <Button
+            variant="outline"
+            className="p-1"
+            onClick={() => {
+              setIsEditModalOpen(true);
+              setTask(task);
+            }}
+          >
             <Pencil className="w-4 h-4" />
           </Button>
           <span

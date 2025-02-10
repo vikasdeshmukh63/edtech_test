@@ -127,10 +127,7 @@ export function TaskFilters({
             name="status"
             value={filters.status}
             onChange={handleChange}
-            options={[
-              { value: '', label: 'All Statuses' },
-              ...STATUS_OPTIONS,
-            ]}
+            options={[{ value: '', label: 'All Statuses' }, ...STATUS_OPTIONS]}
           />
 
           <Select

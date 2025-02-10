@@ -17,6 +17,8 @@ import { useState } from 'react';
 
 export default function Dashboard() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [task, setTask] = useState<Task | null>(null);
   const [filters, setFilters] = useState({
     priority: '',
     assignedTo: '',
@@ -97,34 +99,49 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <TaskFilters
-        users={usersData?.data || []}
-        categories={categoriesData?.data || []}
-        projects={projectsData?.data || []}
-        onFilterChange={setFilters}
-        onResetFilters={() =>
-          setFilters({
-            priority: '',
-            assignedTo: '',
-            startDate: '',
-            endDate: '',
-            search: '',
-            status: '',
-            categoryId: '',
-            projectId: '',
-          })
-        }
-        isOpen={isFilterOpen}
-        onClose={() => setIsFilterOpen(false)}
-      />
+      {isFilterOpen && (
+        <TaskFilters
+          users={usersData?.data || []}
+          categories={categoriesData?.data || []}
+          projects={projectsData?.data || []}
+          onFilterChange={setFilters}
+          onResetFilters={() =>
+            setFilters({
+              priority: '',
+              assignedTo: '',
+              startDate: '',
+              endDate: '',
+              search: '',
+              status: '',
+              categoryId: '',
+              projectId: '',
+            })
+          }
+          isOpen={isFilterOpen}
+          onClose={() => setIsFilterOpen(false)}
+        />
+      )}
 
-      <TaskModal
-        isOpen={isCreateModalOpen}
-        onClose={() => setIsCreateModalOpen(false)}
-        categories={categoriesData?.data || []}
-        projects={projectsData?.data || []}
-        users={usersData?.data || []}
-      />
+      {isCreateModalOpen && (
+        <TaskModal
+          isOpen={isCreateModalOpen}
+          onClose={() => setIsCreateModalOpen(false)}
+          categories={categoriesData?.data || []}
+          projects={projectsData?.data || []}
+          users={usersData?.data || []}
+        />
+      )}
+
+      {isEditModalOpen && (
+        <TaskModal
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          task={task}
+          categories={categoriesData?.data || []}
+          projects={projectsData?.data || []}
+          users={usersData?.data || []}
+        />
+      )}
 
       {hasNoTasks ? (
         <div className="text-center p-8 bg-white dark:bg-gray-800 rounded-lg shadow">
@@ -136,6 +153,8 @@ export default function Dashboard() {
             page.tasks.map((task, taskIndex) => (
               <TaskCard
                 key={task._id}
+                setTask={setTask}
+                setIsEditModalOpen={setIsEditModalOpen}
                 selectedTasks={selectedTasks}
                 setSelectedTasks={setSelectedTasks}
                 task={task}

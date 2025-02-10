@@ -39,9 +39,7 @@ export default function Home() {
   const router = useRouter();
 
   if (isLoading) {
-    return (
-      <Loader className="w-full h-screen" />
-    );
+    return <Loader className="w-full h-screen" />;
   }
 
   if (isAuthenticated) {

@@ -3,7 +3,7 @@ export interface Task {
   createdAt: string;
   createdBy: string;
   description: string;
-  dueDate: string;
+  dueDate: Date;
   priority: string;
   projectId: string;
   status: string;
