@@ -87,7 +87,7 @@ export default function SignUp() {
   };
 
   if (isAuthenticated) {
-    router.push('/dashboard');
+    return null;
   }
 
   return (

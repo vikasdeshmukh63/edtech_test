@@ -6,6 +6,7 @@ import Loader from '@/components/Loader';
 import TaskCard from '@/components/TaskCard';
 import { TaskFilters } from '@/components/TaskFilters';
 import { TaskModal } from '@/components/TaskModal';
+import { useAuthRedirect } from '@/hooks/useAuthRedirect';
 import { useCategories } from '@/hooks/useCategories';
 import { useFilteredTasks } from '@/hooks/useFilteredTasks';
 import { useProjects } from '@/hooks/useProjects';
@@ -16,6 +17,7 @@ import { Filter, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
 export default function Dashboard() {
+  const { isAuthenticated } = useAuthRedirect();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [task, setTask] = useState<Task | null>(null);
@@ -48,11 +50,14 @@ export default function Dashboard() {
   };
 
   const handleUpdateTask = (updates: Partial<Task>, task: Task) => {
-    console.log(task)
+    console.log(task);
     updateTask({
       ...task,
       ...updates,
-      dueDate: task.dueDate instanceof Date ? task.dueDate.toISOString() : task.dueDate,
+      dueDate:
+        task.dueDate instanceof Date
+          ? task.dueDate.toISOString()
+          : task.dueDate,
     });
   };
 
@@ -66,6 +71,10 @@ export default function Dashboard() {
 
   if (isLoading) {
     return <Loader className="w-full h-screen" />;
+  }
+
+  if (!isAuthenticated) {
+    return null;
   }
 
   const hasNoTasks = !data?.pages[0]?.tasks.length;

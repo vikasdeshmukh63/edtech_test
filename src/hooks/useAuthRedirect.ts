@@ -1,8 +1,10 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { useAuthState } from './useAuthState';
+import { useRouter } from 'next/navigation';
+
+const allowedUnauthenticatedRoutes = ['/auth/signin', '/auth/signup', '/'];
 
 export const useAuthRedirect = (
   authenticatedRedirect: string = '/dashboard',
@@ -15,20 +17,12 @@ export const useAuthRedirect = (
     if (!isLoading) {
       if (isAuthenticated) {
         // If user is authenticated and trying to access auth pages or home page
-        if (
-          window.location.pathname.startsWith('/auth/') ||
-          window.location.pathname === '/'
-        ) {
+        if (allowedUnauthenticatedRoutes.includes(window.location.pathname)) {
           router.replace(authenticatedRedirect);
         }
       } else {
-        // If user is not authenticated or there's an auth error
-        if (
-          !window.location.pathname.startsWith('/auth/') &&
-          window.location.pathname !== '/' &&
-          window.location.pathname !== '/projects' &&
-          window.location.pathname !== '/categories'
-        ) {
+        // If user is not authenticated and trying to access restricted pages
+        if (!allowedUnauthenticatedRoutes.includes(window.location.pathname)) {
           router.replace(unauthenticatedRedirect);
         }
       }

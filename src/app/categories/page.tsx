@@ -9,8 +9,9 @@ import { useCategories } from '@/hooks/useCategories';
 import { Category } from '@/types/types';
 import Loader from '@/components/Loader';
 import CategoryCard from '@/components/CategoryCard';
-
+import { useAuthRedirect } from '@/hooks/useAuthRedirect';
 const CategoriesPage = () => {
+  const { isAuthenticated } = useAuthRedirect();
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [editCategory, setEditCategory] = useState<Category | null>(null);
@@ -27,6 +28,10 @@ const CategoriesPage = () => {
 
   if (isLoading) {
     return <Loader className="w-full h-screen" />;
+  }
+
+  if (!isAuthenticated) {
+    return null;
   }
 
   return (

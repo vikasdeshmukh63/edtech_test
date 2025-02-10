@@ -8,14 +8,19 @@ import { useProfile } from '@/hooks/useProfile';
 import { Pencil } from 'lucide-react';
 import EditProfileModal from '@/components/EditProfileModal';
 import ResetPasswordModal from '@/components/ResetPasswordModal';
-
+import { useAuthRedirect } from '@/hooks/useAuthRedirect';
 const ProfilePage = () => {
-  const { getProfile, updateProfile } = useProfile();
+  const { getProfile } = useProfile();
+  const { isAuthenticated } = useAuthRedirect();
   const { data: user, isLoading } = getProfile;
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
   const [isResetPasswordOpen, setIsResetPasswordOpen] = useState(false);
 
   if (isLoading) return <Loader className="w-full h-screen" />;
+
+  if (!isAuthenticated) {
+    return null;
+  }
 
   return (
     <Container className="py-6">

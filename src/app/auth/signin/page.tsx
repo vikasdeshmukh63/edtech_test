@@ -5,6 +5,7 @@ import { Card } from '@/components/Card';
 import { Container } from '@/components/Container';
 import { Input } from '@/components/Input';
 import { useAuth } from '@/hooks/useAuth';
+import { useAuthRedirect } from '@/hooks/useAuthRedirect';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react';
@@ -27,6 +28,8 @@ const signInSchema = yup.object().shape({
 });
 
 export default function SignIn() {
+  const { isAuthenticated } = useAuthRedirect();
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -79,6 +82,10 @@ export default function SignIn() {
       }
     }
   };
+
+  if (isAuthenticated) {
+    return null;
+  }
 
   return (
     <Container className="flex items-center justify-center h-screen w-full">

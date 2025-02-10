@@ -9,13 +9,14 @@ import { useProjects } from '@/hooks/useProjects';
 import { Project } from '@/types/types';
 import Loader from '@/components/Loader';
 import ProjectCard from '@/components/ProjectCard';
-
+import { useAuthRedirect } from '@/hooks/useAuthRedirect';
 const ProjectsPage = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [selectedProjects, setSelectedProjects] = useState<string[]>([]);
   const [editProject, setEditProject] = useState<Project | null>(null);
   const { getAllProjects, deleteManyProjects, isLoading } = useProjects();
   const { data: projectsData } = getAllProjects;
+  const { isAuthenticated } = useAuthRedirect();
 
   const handleDeleteManyProjects = () => {
     deleteManyProjects(selectedProjects, {
@@ -27,6 +28,10 @@ const ProjectsPage = () => {
 
   if (isLoading) {
     return <Loader className="w-full h-screen" />;
+  }
+
+  if (!isAuthenticated) {
+    return null;
   }
 
   return (
