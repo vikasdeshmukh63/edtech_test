@@ -1,51 +1,33 @@
-import connectToDatabase from '@/app/api/db/db';
-import User from '@/app/api/models/user';
-import { ResponseType } from '@/app/api/types/types';
 import { NextRequest, NextResponse } from 'next/server';
+import connectToDatabase from '../../db/db';
+import User from '../../models/user';
+import { ResponseType } from '../../types/types';
+import { errorHandler } from '../../utils/errorHandler';
+import { UnauthorizedError, NotFoundError } from '../../utils/errors';
 
-export async function GET(request: NextRequest) {
-  try {
-    const userId = request.headers.get('x-user-id');
+export const runtime = 'nodejs';
 
-    if (!userId) {
-      return NextResponse.json<ResponseType>(
-        {
-          success: false,
-          message: 'User not authenticated',
-        },
-        { status: 401 }
-      );
-    }
+export const GET = errorHandler(async (request: NextRequest) => {
+  const userId = request.headers.get('x-user-id');
 
-    await connectToDatabase();
-
-    const user = await User.findById(userId).select('-password -__v');
-
-    if (!user) {
-      return NextResponse.json<ResponseType>(
-        {
-          success: false,
-          message: 'User not authenticated',
-        },
-        { status: 401 }
-      );
-    }
-
-    return NextResponse.json<ResponseType>(
-      {
-        success: true,
-        message: 'User fetched successfully',
-        data: user,
-      },
-      { status: 200 }
-    );
-  } catch (error) {
-    return NextResponse.json<ResponseType>(
-      {
-        success: false,
-        message: 'Failed to fetch user',
-      },
-      { status: 500 }
-    );
+  if (!userId) {
+    throw new UnauthorizedError('User not authenticated');
   }
-}
+
+  await connectToDatabase();
+
+  const user = await User.findById(userId).select('-password -__v');
+
+  if (!user) {
+    throw new NotFoundError('User not found');
+  }
+
+  return NextResponse.json<ResponseType>(
+    {
+      success: true,
+      message: 'User fetched successfully',
+      data: user,
+    },
+    { status: 200 }
+  );
+});

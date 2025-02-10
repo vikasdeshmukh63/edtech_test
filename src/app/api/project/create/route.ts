@@ -2,51 +2,36 @@ import Project from '../../models/project';
 import { CreateProject, ResponseType } from '../../types/types';
 import connectToDatabase from '../../db/db';
 import { NextRequest, NextResponse } from 'next/server';
+import { errorHandler } from '../../utils/errorHandler';
+import { BadRequestError, UnauthorizedError } from '../../utils/errors';
 
 export const runtime = 'nodejs';
 
-export async function POST(request: NextRequest) {
-  try {
-    const { title, description }: CreateProject = await request.json();
+export const POST = errorHandler(async (request: NextRequest) => {
+  const { title, description }: CreateProject = await request.json();
 
-    if (!title || !description) {
-      return NextResponse.json<ResponseType>(
-        { success: false, message: 'All fields are required' },
-        { status: 400 }
-      );
-    }
-
-    const userId = request.headers.get('x-user-id');
-
-    if (!userId) {
-      return NextResponse.json<ResponseType>(
-        {
-          success: false,
-          message: 'User not authenticated',
-        },
-        { status: 401 }
-      );
-    }
-
-    await connectToDatabase();
-
-    await Project.create({
-      title,
-      description,
-      createdBy: userId,
-    });
-
-    return NextResponse.json<ResponseType>(
-      {
-        success: true,
-        message: 'Project created successfully',
-      },
-      { status: 201 }
-    );
-  } catch (error) {
-    return NextResponse.json<ResponseType>(
-      { success: false, message: 'Failed to create project' },
-      { status: 500 }
-    );
+  if (!title || !description) {
+    throw new BadRequestError('All fields are required');
   }
-}
+
+  const userId = request.headers.get('x-user-id');
+  if (!userId) {
+    throw new UnauthorizedError('User not authenticated');
+  }
+
+  await connectToDatabase();
+
+  await Project.create({
+    title,
+    description,
+    createdBy: userId,
+  });
+
+  return NextResponse.json<ResponseType>(
+    {
+      success: true,
+      message: 'Project created successfully',
+    },
+    { status: 201 }
+  );
+});

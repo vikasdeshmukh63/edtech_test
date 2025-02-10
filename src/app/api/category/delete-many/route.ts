@@ -2,37 +2,28 @@ import { NextRequest, NextResponse } from 'next/server';
 import connectToDatabase from '../../db/db';
 import Category from '../../models/category';
 import { ResponseType } from '../../types/types';
+import { errorHandler } from '../../utils/errorHandler';
+import { UnauthorizedError } from '../../utils/errors';
 
-export async function DELETE(request: NextRequest) {
-  try {
-    const { categoryIds } = await request.json();
+export const runtime = 'nodejs';
 
-    const userId = request.headers.get('x-user-id');
-    if (!userId) {
-      return NextResponse.json<ResponseType>(
-        { success: false, message: 'User not authenticated' },
-        { status: 401 }
-      );
-    }
+export const DELETE = errorHandler(async (request: NextRequest) => {
+  const { categoryIds } = await request.json();
 
-    await connectToDatabase();
-
-    await Category.deleteMany({ _id: { $in: categoryIds } });
-
-    return NextResponse.json<ResponseType>(
-      {
-        success: true,
-        message: 'Categories deleted successfully',
-      },
-      { status: 200 }
-    );
-  } catch (error) {
-    return NextResponse.json<ResponseType>(
-      {
-        success: false,
-        message: 'Failed to delete categories',
-      },
-      { status: 500 }
-    );
+  const userId = request.headers.get('x-user-id');
+  if (!userId) {
+    throw new UnauthorizedError('User not authenticated');
   }
-}
+
+  await connectToDatabase();
+
+  await Category.deleteMany({ _id: { $in: categoryIds } });
+
+  return NextResponse.json<ResponseType>(
+    {
+      success: true,
+      message: 'Categories deleted successfully',
+    },
+    { status: 200 }
+  );
+});

@@ -1,55 +1,47 @@
+import { NextRequest, NextResponse } from 'next/server';
 import connectToDatabase from '@/app/api/db/db';
 import Task from '@/app/api/models/task';
 import { ResponseType } from '@/app/api/types/types';
-import { NextRequest, NextResponse } from 'next/server';
+import { errorHandler } from '@/app/api/utils/errorHandler';
+import {
+  BadRequestError,
+  UnauthorizedError,
+  ForbiddenError,
+  NotFoundError,
+} from '@/app/api/utils/errors';
 
-export async function DELETE(
-  request: NextRequest,
-  context: { params: Promise<{ id: string }> }
-) {
-  try {
+export const runtime = 'nodejs';
+
+export const DELETE = errorHandler(
+  async (
+    request: NextRequest,
+    context: { params: Promise<{ id: string }> }
+  ) => {
     const { id } = await context.params;
 
     if (!id) {
-      return NextResponse.json<ResponseType>({
-        success: false,
-        message: 'Task ID is required',
-      });
+      throw new BadRequestError('Task ID is required');
     }
 
     const userId = request.headers.get('x-user-id');
     if (!userId) {
-      return NextResponse.json<ResponseType>({
-        success: false,
-        message: 'User not authenticated',
-      });
+      throw new UnauthorizedError('User not authenticated');
     }
 
     await connectToDatabase();
 
     const task = await Task.findById(id);
 
+    if (!task) {
+      throw new NotFoundError('Task not found');
+    }
+
     if (task.createdBy !== userId) {
-      return NextResponse.json<ResponseType>(
-        {
-          success: false,
-          message: 'You are not authorized to delete this task',
-        },
-        { status: 403 }
-      );
+      throw new ForbiddenError('You are not authorized to delete this task');
     }
 
     await Task.deleteOne({ _id: id });
 
-    if (!task) {
-      return NextResponse.json<ResponseType>(
-        {
-          success: false,
-          message: 'Task not found',
-        },
-        { status: 404 }
-      );
-    }
     return NextResponse.json<ResponseType>(
       {
         success: true,
@@ -57,13 +49,5 @@ export async function DELETE(
       },
       { status: 200 }
     );
-  } catch (error) {
-    return NextResponse.json<ResponseType>(
-      {
-        success: false,
-        message: 'Failed to delete task',
-      },
-      { status: 500 }
-    );
   }
-}
+);

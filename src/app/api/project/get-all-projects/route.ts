@@ -1,35 +1,29 @@
+import { NextRequest, NextResponse } from 'next/server';
 import Project from '../../models/project';
 import { ResponseType } from '../../types/types';
-import { NextRequest, NextResponse } from 'next/server';
 import connectToDatabase from '../../db/db';
+import { errorHandler } from '../../utils/errorHandler';
+import { UnauthorizedError } from '../../utils/errors';
 
-export async function GET(request: NextRequest) {
-  try {
-    const userId = request.headers.get('x-user-id');
+export const runtime = 'nodejs';
 
-    if (!userId) {
-      return NextResponse.json(
-        { success: false, message: 'User not authenticated' },
-        { status: 401 }
-      );
-    }
+export const GET = errorHandler(async (request: NextRequest) => {
+  const userId = request.headers.get('x-user-id');
 
-    await connectToDatabase();
-
-    const projects = await Project.find().select('-__v');
-
-    return NextResponse.json<ResponseType>(
-      {
-        success: true,
-        message: 'Projects fetched successfully',
-        data: projects,
-      },
-      { status: 200 }
-    );
-  } catch (error) {
-    return NextResponse.json<ResponseType>(
-      { success: false, message: 'Failed to get projects' },
-      { status: 500 }
-    );
+  if (!userId) {
+    throw new UnauthorizedError('User not authenticated');
   }
-}
+
+  await connectToDatabase();
+
+  const projects = await Project.find().select('-__v');
+
+  return NextResponse.json<ResponseType>(
+    {
+      success: true,
+      message: 'Projects fetched successfully',
+      data: projects,
+    },
+    { status: 200 }
+  );
+});

@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { verifyToken } from '../../utils/utils';
+import { errorHandler } from '../../utils/errorHandler';
 
 export const runtime = 'nodejs';
 
-export async function GET() {
+export const GET = errorHandler(async () => {
   const token = (await cookies()).get('token')?.value;
 
   if (!token) {
@@ -17,4 +18,4 @@ export async function GET() {
   }
 
   return NextResponse.json({ success: true });
-}
+});

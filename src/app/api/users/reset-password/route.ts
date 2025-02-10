@@ -1,79 +1,45 @@
-import User from '@/app/api/models/user';
-import { ResponseType } from '@/app/api/types/types';
 import { NextRequest, NextResponse } from 'next/server';
 import connectToDatabase from '../../db/db';
-import { hashPassword, verifyPassword } from '../../utils/utils';
+import User from '../../models/user';
+import { ResponseType } from '../../types/types';
+import { hashPassword } from '../../utils/utils';
+import { errorHandler } from '../../utils/errorHandler';
+import {
+  BadRequestError,
+  UnauthorizedError,
+  NotFoundError,
+} from '../../utils/errors';
 
-export async function POST(request: NextRequest) {
-  try {
-    const { newPassword, oldPassword } = await request.json();
+export const runtime = 'nodejs';
 
-    if (!newPassword || !oldPassword) {
-      return NextResponse.json<ResponseType>(
-        {
-          success: false,
-          message: 'All fields are required',
-        },
-        { status: 400 }
-      );
-    }
+export const POST = errorHandler(async (request: NextRequest) => {
+  const { password } = await request.json();
 
-    const userId = request.headers.get('x-user-id');
-
-    if (!userId) {
-      return NextResponse.json<ResponseType>(
-        {
-          success: false,
-          message: 'User not authenticated',
-        },
-        { status: 401 }
-      );
-    }
-
-    await connectToDatabase();
-
-    const user = await User.findOne({ _id: userId });
-
-    if (!user) {
-      return NextResponse.json<ResponseType>(
-        {
-          success: false,
-          message: 'User not found',
-        },
-        { status: 404 }
-      );
-    }
-
-    const isPasswordCorrect = await verifyPassword(oldPassword, user.password);
-
-    if (!isPasswordCorrect) {
-      return NextResponse.json<ResponseType>(
-        {
-          success: false,
-          message: 'Invalid old password',
-        },
-        { status: 401 }
-      );
-    }
-
-    const hashedNewPassword = await hashPassword(newPassword);
-    user.password = hashedNewPassword;
-    await user.save();
-
-    return NextResponse.json<ResponseType>(
-      {
-        success: true,
-        message: 'Password updated successfully',
-      },
-      { status: 200 }
-    );
-  } catch (error) {
-    return NextResponse.json<ResponseType>(
-      {
-        success: false,
-        message: 'Failed to update password',
-      },
-      { status: 500 }
-    );
+  if (!password) {
+    throw new BadRequestError('Password is required');
   }
-}
+
+  const userId = request.headers.get('x-user-id');
+  if (!userId) {
+    throw new UnauthorizedError('User not authenticated');
+  }
+
+  await connectToDatabase();
+
+  const hashedPassword = await hashPassword(password);
+  const user = await User.findByIdAndUpdate(userId, {
+    password: hashedPassword,
+  });
+
+  if (!user) {
+    throw new NotFoundError('User not found');
+  }
+
+  return NextResponse.json<ResponseType>(
+    {
+      success: true,
+      message: 'Password updated successfully',
+    },
+    { status: 200 }
+  );
+});

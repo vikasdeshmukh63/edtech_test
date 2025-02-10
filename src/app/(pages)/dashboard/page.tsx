@@ -51,7 +51,6 @@ export default function Dashboard() {
   };
 
   const handleUpdateTask = (updates: Partial<Task>, task: Task) => {
-    console.log(task);
     updateTask({
       ...task,
       ...updates,

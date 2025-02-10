@@ -1,30 +1,23 @@
 import { NextResponse } from 'next/server';
 import { ResponseType } from '../../types/types';
+import { errorHandler } from '../../utils/errorHandler';
 
-export async function POST() {
-  try {
-    const response = NextResponse.json<ResponseType>(
-      {
-        success: true,
-        message: 'Logged out successfully',
-      },
-      { status: 200 }
-    );
+export const runtime = 'nodejs';
 
-    // Clear the token cookie
-    response.cookies.set('token', '', {
-      expires: new Date(0),
-      path: '/',
-    });
+export const POST = errorHandler(async () => {
+  const response = NextResponse.json<ResponseType>(
+    {
+      success: true,
+      message: 'Logged out successfully',
+    },
+    { status: 200 }
+  );
 
-    return response;
-  } catch (error) {
-    return NextResponse.json<ResponseType>(
-      {
-        success: false,
-        message: 'Failed to logout',
-      },
-      { status: 500 }
-    );
-  }
-}
+  // Clear the token cookie
+  response.cookies.set('token', '', {
+    expires: new Date(0),
+    path: '/',
+  });
+
+  return response;
+});

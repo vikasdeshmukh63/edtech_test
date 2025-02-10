@@ -1,29 +1,30 @@
+import { NextRequest, NextResponse } from 'next/server';
 import connectToDatabase from '@/app/api/db/db';
 import Project from '@/app/api/models/project';
-import { NextRequest, NextResponse } from 'next/server';
 import { ResponseType } from '@/app/api/types/types';
+import { errorHandler } from '@/app/api/utils/errorHandler';
+import {
+  BadRequestError,
+  NotFoundError,
+  UnauthorizedError,
+} from '@/app/api/utils/errors';
 
-export async function DELETE(
-  request: NextRequest,
-  context: { params: Promise<{ id: string }> }
-) {
-  try {
+export const runtime = 'nodejs';
+
+export const DELETE = errorHandler(
+  async (
+    request: NextRequest,
+    context: { params: Promise<{ id: string }> }
+  ) => {
     const { id } = await context.params;
 
     if (!id) {
-      return NextResponse.json<ResponseType>(
-        { success: false, message: 'Project ID is required' },
-        { status: 400 }
-      );
+      throw new BadRequestError('Project ID is required');
     }
 
     const userId = request.headers.get('x-user-id');
-
     if (!userId) {
-      return NextResponse.json<ResponseType>(
-        { success: false, message: 'User not authenticated' },
-        { status: 403 }
-      );
+      throw new UnauthorizedError('User not authenticated');
     }
 
     await connectToDatabase();
@@ -34,20 +35,12 @@ export async function DELETE(
     });
 
     if (!project) {
-      return NextResponse.json<ResponseType>(
-        { success: false, message: 'Project not found or unauthorized' },
-        { status: 404 }
-      );
+      throw new NotFoundError('Project not found or unauthorized');
     }
 
     return NextResponse.json<ResponseType>(
       { success: true, message: 'Project deleted successfully' },
       { status: 200 }
     );
-  } catch (error) {
-    return NextResponse.json<ResponseType>(
-      { success: false, message: 'Failed to delete project' },
-      { status: 500 }
-    );
   }
-}
+);

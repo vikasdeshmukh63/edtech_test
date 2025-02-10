@@ -2,28 +2,29 @@ import { NextRequest, NextResponse } from 'next/server';
 import connectToDatabase from '../../../db/db';
 import Category from '../../../models/category';
 import { ResponseType } from '../../../types/types';
+import { errorHandler } from '../../../utils/errorHandler';
+import {
+  BadRequestError,
+  UnauthorizedError,
+  NotFoundError,
+} from '../../../utils/errors';
 
-export async function DELETE(
-  request: NextRequest,
-  context: { params: Promise<{ id: string }> }
-) {
-  try {
+export const runtime = 'nodejs';
+
+export const DELETE = errorHandler(
+  async (
+    request: NextRequest,
+    context: { params: Promise<{ id: string }> }
+  ) => {
     const { id } = await context.params;
 
     if (!id) {
-      return NextResponse.json<ResponseType>(
-        { success: false, message: 'Category ID is required' },
-        { status: 400 }
-      );
+      throw new BadRequestError('Category ID is required');
     }
 
     const userId = request.headers.get('x-user-id');
-
     if (!userId) {
-      return NextResponse.json<ResponseType>(
-        { success: false, message: 'User not authenticated' },
-        { status: 401 }
-      );
+      throw new UnauthorizedError('User not authenticated');
     }
 
     await connectToDatabase();
@@ -31,20 +32,12 @@ export async function DELETE(
     const category = await Category.findByIdAndDelete(id);
 
     if (!category) {
-      return NextResponse.json<ResponseType>(
-        { success: false, message: 'Category not found' },
-        { status: 404 }
-      );
+      throw new NotFoundError('Category not found');
     }
 
     return NextResponse.json<ResponseType>(
       { success: true, message: 'Category deleted successfully' },
       { status: 200 }
     );
-  } catch {
-    return NextResponse.json<ResponseType>(
-      { success: false, message: 'Failed to delete category' },
-      { status: 500 }
-    );
   }
-}
+);
