@@ -6,7 +6,7 @@ The Task Management Application is a modern, full-stack application designed to 
 
 ## Live Demo
 
-Check out the live application: [Task Management App](https://edtech-test-k9wvnra0z-vikasdeshmukh63s-projects.vercel.app/)
+Check out the live application: [Task Management App](https://edtech-test-kappa.vercel.app/)
 
 ## Table of Contents
 
