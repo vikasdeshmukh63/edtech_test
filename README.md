@@ -4,6 +4,10 @@
 
 The Task Management Application is a modern, full-stack application designed to help users organize tasks, manage projects, and track progress efficiently. Built with Next.js, MongoDB, and TypeScript, it offers a robust set of features and a seamless user experience.
 
+## Live Demo
+
+Check out the live application: [Task Management App](https://edtech-test-k9wvnra0z-vikasdeshmukh63s-projects.vercel.app/)
+
 ## Table of Contents
 
 1. [Features](#features)

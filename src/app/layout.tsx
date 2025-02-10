@@ -6,6 +6,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './globals.css';
+import Footer from '@/components/Footer';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -30,12 +31,13 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white dark:bg-gray-900 text-gray-900 dark:text-white`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white dark:bg-gray-900 text-gray-900 dark:text-white min-h-screen flex flex-col`}
       >
         <ThemeProvider>
           <QueryClientProvider>
             <Header />
-            {children}
+            <main className="flex-1">{children}</main>
+            <Footer />
           </QueryClientProvider>
         </ThemeProvider>
         <ToastContainer position="top-right" theme="colored" />
