@@ -1,11 +1,11 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { CreateTask, ResponseType } from '../../types/types';
 import connectToDatabase from '../../db/db';
 import Task from '../../models/task';
 
 export const runtime = 'nodejs';
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const {
       title,

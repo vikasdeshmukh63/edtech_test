@@ -1,10 +1,10 @@
 import connectToDatabase from '@/app/api/db/db';
 import Project from '@/app/api/models/project';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { ResponseType } from '@/app/api/types/types';
 
 export async function DELETE(
-  request: Request,
+  request: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
   try {

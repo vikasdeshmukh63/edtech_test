@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import connectToDatabase from '../../db/db';
 import User from '../../models/user';
 import { AuthResponse, RegisterCredentials } from '../../types/types';
@@ -6,7 +6,7 @@ import { hashPassword } from '../../utils/utils';
 
 export const runtime = 'nodejs';
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const { name, email, password }: RegisterCredentials = await request.json();
 

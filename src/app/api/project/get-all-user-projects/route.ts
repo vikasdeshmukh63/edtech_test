@@ -1,8 +1,8 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import connectToDatabase from '../../db/db';
 import Project from '../../models/project';
 import { ResponseType } from '../../types/types';
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
     const userId = request.headers.get('x-user-id');
 

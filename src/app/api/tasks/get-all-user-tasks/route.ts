@@ -1,9 +1,9 @@
 import Task from '../../models/task';
 import { ResponseType } from '../../types/types';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import connectToDatabase from '../../db/db';
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
     const userId = request.headers.get('x-user-id');
 

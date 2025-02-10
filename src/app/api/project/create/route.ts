@@ -1,11 +1,11 @@
 import Project from '../../models/project';
 import { CreateProject, ResponseType } from '../../types/types';
 import connectToDatabase from '../../db/db';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 export const runtime = 'nodejs';
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const { title, description }: CreateProject = await request.json();
 

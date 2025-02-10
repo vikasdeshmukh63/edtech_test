@@ -1,10 +1,10 @@
 import User from '@/app/api/models/user';
 import { ResponseType } from '@/app/api/types/types';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import connectToDatabase from '../../db/db';
 import { hashPassword, verifyPassword } from '../../utils/utils';
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const { newPassword, oldPassword } = await request.json();
 

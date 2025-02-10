@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import connectToDatabase from '../../../db/db';
 import { UpdateProject } from '../../../types/types';
 import Project from '../../../models/project';
@@ -6,7 +6,7 @@ import { ResponseType } from '../../../types/types';
 export const runtime = 'nodejs';
 
 export async function PUT(
-  request: Request,
+  request: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
   try {

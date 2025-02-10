@@ -1,10 +1,10 @@
 import { ResponseType, UpdateTask } from '@/app/api/types/types';
 import connectToDatabase from '@/app/api/db/db';
 import Task from '@/app/api/models/task';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function PUT(
-  request: Request,
+  request: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
   try {

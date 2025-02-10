@@ -1,9 +1,9 @@
 import connectToDatabase from '../../db/db';
 import Category from '../../models/category';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { ResponseType } from '../../types/types';
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const { name } = await request.json();
 

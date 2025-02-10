@@ -1,9 +1,9 @@
 import connectToDatabase from '@/app/api/db/db';
 import User from '@/app/api/models/user';
 import { ResponseType } from '@/app/api/types/types';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function PUT(request: Request) {
+export async function PUT(request: NextRequest) {
   try {
     const { name, email } = await request.json();
 
