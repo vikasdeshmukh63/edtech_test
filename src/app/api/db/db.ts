@@ -1,4 +1,7 @@
 import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const MONGODB_URI = process.env.DATABASE_URL;
 
@@ -15,23 +18,16 @@ if (!cached) {
 }
 
 async function connectToDatabase() {
-  if (cached.conn) {
-    return cached.conn;
-  }
-
-  if (!cached.promise) {
-    const opts = {
+  try {
+    const mongooseConnection = await mongoose.connect(MONGODB_URI as string, {
       bufferCommands: false,
-    };
-
-    cached.promise = mongoose
-      .connect(MONGODB_URI as string, opts)
-      .then((mongoose) => {
-        return mongoose;
-      });
+    });
+    console.log('Connected to MongoDB');
+    return mongooseConnection;
+  } catch (error) {
+    console.error('Error connecting to MongoDB:', error);
+    throw error;
   }
-  cached.conn = await cached.promise;
-  return cached.conn;
 }
 
 export default connectToDatabase;

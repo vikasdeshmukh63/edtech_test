@@ -3,6 +3,7 @@
 import { Button } from '@/components/Button';
 import { Container } from '@/components/Container';
 import Loader from '@/components/Loader';
+import NoData from '@/components/NoData';
 import TaskCard from '@/components/TaskCard';
 import { TaskFilters } from '@/components/TaskFilters';
 import { TaskModal } from '@/components/TaskModal';
@@ -13,7 +14,7 @@ import { useProjects } from '@/hooks/useProjects';
 import { useTask } from '@/hooks/useTask';
 import { useUsers } from '@/hooks/useUsers';
 import { Task } from '@/types/types';
-import { Filter, Plus, Trash2 } from 'lucide-react';
+import { Filter, FolderX, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
 export default function Dashboard() {
@@ -157,9 +158,7 @@ export default function Dashboard() {
       )}
 
       {hasNoTasks ? (
-        <div className="text-center p-8 bg-white dark:bg-gray-800 rounded-lg shadow">
-          <p className="text-gray-500 dark:text-gray-400">No tasks available</p>
-        </div>
+        <NoData title="No tasks available" />
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {data?.pages.map((page, pageIndex) =>

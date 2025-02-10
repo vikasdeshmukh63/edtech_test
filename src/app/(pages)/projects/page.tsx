@@ -10,6 +10,8 @@ import { Project } from '@/types/types';
 import Loader from '@/components/Loader';
 import ProjectCard from '@/components/ProjectCard';
 import { useAuthRedirect } from '@/hooks/useAuthRedirect';
+import NoData from '@/components/NoData';
+
 const ProjectsPage = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [selectedProjects, setSelectedProjects] = useState<string[]>([]);
@@ -17,6 +19,8 @@ const ProjectsPage = () => {
   const { getAllProjects, deleteManyProjects, isLoading } = useProjects();
   const { data: projectsData } = getAllProjects;
   const { isAuthenticated } = useAuthRedirect();
+
+  const hasNoProjects = !projectsData?.data.length;
 
   const handleDeleteManyProjects = () => {
     deleteManyProjects(selectedProjects, {
@@ -58,18 +62,22 @@ const ProjectsPage = () => {
           </Button>
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-        {projectsData?.data.map((project: Project) => (
-          <ProjectCard
-            key={project._id}
-            project={project}
-            selectedProjects={selectedProjects}
-            setSelectedProjects={setSelectedProjects}
-            setEditProject={setEditProject}
-            setIsCreateModalOpen={setIsCreateModalOpen}
-          />
-        ))}
-      </div>
+      {hasNoProjects ? (
+        <NoData title="No projects available" />
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+          {projectsData?.data.map((project: Project) => (
+            <ProjectCard
+              key={project._id}
+              project={project}
+              selectedProjects={selectedProjects}
+              setSelectedProjects={setSelectedProjects}
+              setEditProject={setEditProject}
+              setIsCreateModalOpen={setIsCreateModalOpen}
+            />
+          ))}
+        </div>
+      )}
       {isCreateModalOpen && (
         <ProjectModal
           isOpen={isCreateModalOpen}

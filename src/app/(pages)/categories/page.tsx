@@ -10,6 +10,8 @@ import { Category } from '@/types/types';
 import Loader from '@/components/Loader';
 import CategoryCard from '@/components/CategoryCard';
 import { useAuthRedirect } from '@/hooks/useAuthRedirect';
+import NoData from '@/components/NoData';
+
 const CategoriesPage = () => {
   const { isAuthenticated } = useAuthRedirect();
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -25,6 +27,8 @@ const CategoriesPage = () => {
       },
     });
   };
+
+  const hasNoCategories = !categoriesData?.data.length;
 
   if (isLoading) {
     return <Loader className="w-full h-screen" />;
@@ -58,18 +62,22 @@ const CategoriesPage = () => {
           </Button>
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-        {categoriesData?.data.map((category: Category) => (
-          <CategoryCard
-            key={category._id}
-            category={category}
-            selectedCategories={selectedCategories}
-            setSelectedCategories={setSelectedCategories}
-            setEditCategory={setEditCategory}
-            setIsCreateModalOpen={setIsCreateModalOpen}
-          />
-        ))}
-      </div>
+      {hasNoCategories ? (
+        <NoData title="No categories available" />
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+          {categoriesData?.data.map((category: Category) => (
+            <CategoryCard
+              key={category._id}
+              category={category}
+              selectedCategories={selectedCategories}
+              setSelectedCategories={setSelectedCategories}
+              setEditCategory={setEditCategory}
+              setIsCreateModalOpen={setIsCreateModalOpen}
+            />
+          ))}
+        </div>
+      )}
       {isCreateModalOpen && (
         <CategoryModal
           isOpen={isCreateModalOpen}
