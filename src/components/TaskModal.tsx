@@ -4,16 +4,24 @@ import { Input } from './Input';
 import { Select } from './Select';
 import { useTask } from '@/hooks/useTask';
 import { toast } from 'react-toastify';
-import { Category, Project } from '@/types/types';
+import { Category, Project, User } from '@/types/types';
+import { PRIORITY_OPTIONS } from '@/constants/constants';
 
 interface TaskModalProps {
   isOpen: boolean;
   onClose: () => void;
   categories: Category[];
   projects: Project[];
+  users: User[];
 }
 
-export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose }) => {
+export const TaskModal: React.FC<TaskModalProps> = ({
+  isOpen,
+  onClose,
+  users,
+  categories,
+  projects,
+}) => {
   const { createTask } = useTask();
   const [formData, setFormData] = useState({
     title: '',
@@ -27,12 +35,10 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      await createTask(formData);
-      onClose();
-    } catch (error) {
-      toast.error('Failed to create task');
-    }
+
+    await createTask(formData);
+    onClose();
+
   };
 
   if (!isOpen) return null;
@@ -45,6 +51,8 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose }) => {
           <Input
             label="Title"
             value={formData.title}
+            placeholder="Enter task title"
+            className="p-3"
             onChange={(e) =>
               setFormData((prev) => ({ ...prev, title: e.target.value }))
             }
@@ -52,6 +60,8 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose }) => {
           <Input
             label="Description"
             value={formData.description}
+            placeholder="Enter task description"
+            className="p-3"
             onChange={(e) =>
               setFormData((prev) => ({ ...prev, description: e.target.value }))
             }
@@ -59,13 +69,29 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose }) => {
           <Select
             label="Priority"
             value={formData.priority}
+            className="p-4"
             onChange={(e) =>
               setFormData((prev) => ({ ...prev, priority: e.target.value }))
             }
             options={[
-              { value: 'low', label: 'Low' },
-              { value: 'medium', label: 'Medium' },
-              { value: 'high', label: 'High' },
+              { value: '', label: 'Select Priority' },
+              ...PRIORITY_OPTIONS,
+            ]}
+          />
+
+          <Select
+            label="Assigned To"
+            name="assignedTo"
+            value={formData.assignedTo}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, assignedTo: e.target.value }))
+            }
+            options={[
+              { value: '', label: 'All Users' },
+              ...users.map((user) => ({
+                value: user._id,
+                label: user.name,
+              })),
             ]}
           />
           <Input

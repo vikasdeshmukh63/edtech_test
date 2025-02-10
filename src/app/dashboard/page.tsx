@@ -121,6 +121,9 @@ export default function Dashboard() {
       <TaskModal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
+        categories={categoriesData?.data || []}
+        projects={projectsData?.data || []}
+        users={usersData?.data || []}
       />
 
       {hasNoTasks ? (

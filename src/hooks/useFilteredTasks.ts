@@ -9,6 +9,7 @@ interface FilterParams {
   search?: string;
   status?: string;
   projectId?: string;
+  categoryId?: string;
 }
 
 export const useFilteredTasks = (filters: FilterParams) => {
@@ -26,6 +27,8 @@ export const useFilteredTasks = (filters: FilterParams) => {
       if (filters.search) queryParams.append('search', filters.search);
       if (filters.status) queryParams.append('status', filters.status);
       if (filters.projectId) queryParams.append('projectId', filters.projectId);
+      if (filters.categoryId)
+        queryParams.append('categoryId', filters.categoryId);
 
       queryParams.append('page', pageParam.toString());
       queryParams.append('limit', '10'); // Number of items per page

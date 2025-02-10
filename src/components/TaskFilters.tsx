@@ -1,16 +1,24 @@
-import { User } from '@/types';
 import { useState } from 'react';
 import { Button } from './Button';
 import { X } from 'lucide-react';
 import { Input } from './Input';
 import { Select } from './Select';
-import { Project, Category } from '@/types/types';
+import { Project, Category, User } from '@/types/types';
 import { PRIORITY_OPTIONS, STATUS_OPTIONS } from '@/constants/constants';
 interface TaskFiltersProps {
   users: User[];
   categories: Category[];
   projects: Project[];
-  onFilterChange: (filters: any) => void;
+  onFilterChange: (filters: {
+    priority: string;
+    assignedTo: string;
+    startDate: string;
+    endDate: string;
+    search: string;
+    status: string;
+    categoryId: string;
+    projectId: string;
+  }) => void;
   onResetFilters: () => void;
   isOpen: boolean;
   onClose: () => void;
@@ -33,6 +41,7 @@ export function TaskFilters({
     search: '',
     status: '',
     categoryId: '',
+    projectId: '',
   });
 
   const handleChange = (
@@ -56,6 +65,7 @@ export function TaskFilters({
       search: '',
       status: '',
       categoryId: '',
+      projectId: '',
     };
     setFilters(resetFilters);
     onResetFilters();
