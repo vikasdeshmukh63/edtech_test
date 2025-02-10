@@ -22,10 +22,10 @@ export interface CreateTask {
   title: string;
   description: string;
   priority: string;
-  dueDate: string;
+  dueDate?: string | Date;
   categoryId: string;
   projectId: string;
-  assignedTo: string;
+  assignedTo?: string;
 }
 
 export interface UpdateTask extends CreateTask {

@@ -52,15 +52,15 @@ export const TaskModal: React.FC<TaskModalProps> = ({
   useEffect(() => {
     if (task) {
       setFormData({
-        title: task.title,
-        description: task.description,
-        priority: task.priority,
+        title: task.title || '',
+        description: task.description || '',
+        priority: task.priority || 'medium',
         dueDate: task.dueDate
           ? new Date(task.dueDate).toISOString().split('T')[0]
           : new Date().toISOString().split('T')[0],
-        categoryId: task.categoryId,
-        projectId: task.projectId,
-        assignedTo: task.assignedTo,
+        categoryId: task.categoryId || '',
+        projectId: task.projectId || '',
+        assignedTo: task.assignedTo || '',
       });
     }
   }, [task]);

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { User } from '@/types'; // Assuming you have a User type defined
-import { Category, Project, Task } from '@/types/types';
+
+import { Category, Project, Task, User } from '@/types/types';
 import { useInView } from 'react-intersection-observer';
 import { useEffect } from 'react';
 import { Select } from './Select';

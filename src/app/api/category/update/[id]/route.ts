@@ -5,10 +5,11 @@ import { ResponseType } from '@/app/api/types/types';
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const { name } = await request.json();
+    const { id } = await context.params;
 
     if (!name) {
       return NextResponse.json<ResponseType>(
@@ -17,7 +18,7 @@ export async function PUT(
       );
     }
 
-    if (!params.id) {
+    if (!id) {
       return NextResponse.json<ResponseType>(
         { success: false, message: 'Category ID is required' },
         { status: 400 }
@@ -36,7 +37,7 @@ export async function PUT(
     await connectToDatabase();
 
     const category = await Category.findOneAndUpdate(
-      { _id: params.id },
+      { _id: id },
       { name },
       { new: true }
     );

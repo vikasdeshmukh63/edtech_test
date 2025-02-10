@@ -16,7 +16,7 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    await connectToDatabase();
+    const db = await connectToDatabase();
 
     await Project.deleteMany({ _id: { $in: projectIds } });
 

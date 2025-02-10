@@ -5,10 +5,11 @@ import { NextResponse } from 'next/server';
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const updateData: Partial<UpdateTask> = await request.json();
+    const { id } = await context.params;
 
     // Only validate title, description, priority, dueDate, and categoryId if they are provided
     if (
@@ -42,11 +43,7 @@ export async function PUT(
     await connectToDatabase();
 
     // Only update the fields that are provided
-    await Task.findByIdAndUpdate(
-      params.id,
-      { $set: updateData },
-      { new: true }
-    );
+    await Task.findByIdAndUpdate(id, { $set: updateData }, { new: true });
 
     return NextResponse.json<ResponseType>(
       {

@@ -7,11 +7,11 @@ export const runtime = 'nodejs';
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const { title, description }: UpdateProject = await request.json();
-    const { id } = params;
+    const { id } = await context.params;
 
     if (!id) {
       return NextResponse.json<ResponseType>(
