@@ -6,9 +6,9 @@ import User from '../../models/user';
 
 export const runtime = 'nodejs';
 
-export async function POST(req: Request) {
+export async function POST(request: Request) {
   try {
-    const { email, password }: LoginCredentials = await req.json();
+    const { email, password }: LoginCredentials = await request.json();
 
     if (!email || !password) {
       return NextResponse.json<AuthResponse>(

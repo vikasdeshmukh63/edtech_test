@@ -5,9 +5,9 @@ import { NextResponse } from 'next/server';
 
 export const runtime = 'nodejs';
 
-export async function POST(req: Request) {
+export async function POST(request: Request) {
   try {
-    const { title, description }: CreateProject = await req.json();
+    const { title, description }: CreateProject = await request.json();
 
     if (!title || !description) {
       return NextResponse.json<ResponseType>(
@@ -16,7 +16,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const userId = req.headers.get('x-user-id');
+    const userId = request.headers.get('x-user-id');
 
     if (!userId) {
       return NextResponse.json<ResponseType>(

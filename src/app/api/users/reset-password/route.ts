@@ -4,9 +4,9 @@ import { NextResponse } from 'next/server';
 import connectToDatabase from '../../db/db';
 import { hashPassword, verifyPassword } from '../../utils/utils';
 
-export async function POST(req: Request) {
+export async function POST(request: Request) {
   try {
-    const { newPassword, oldPassword } = await req.json();
+    const { newPassword, oldPassword } = await request.json();
 
     if (!newPassword || !oldPassword) {
       return NextResponse.json<ResponseType>(
@@ -18,7 +18,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const userId = req.headers.get('x-user-id');
+    const userId = request.headers.get('x-user-id');
 
     if (!userId) {
       return NextResponse.json<ResponseType>(

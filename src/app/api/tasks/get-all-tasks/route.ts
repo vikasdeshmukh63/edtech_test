@@ -3,9 +3,9 @@ import Task from '@/app/api/models/task';
 import { ResponseType } from '@/app/api/types/types';
 import { NextResponse } from 'next/server';
 
-export async function GET(req: Request) {
+export async function GET(request: Request) {
   try {
-    const userId = req.headers.get('x-user-id');
+    const userId = request.headers.get('x-user-id');
 
     if (!userId) {
       return NextResponse.json<ResponseType>(

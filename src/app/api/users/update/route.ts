@@ -3,11 +3,11 @@ import User from '@/app/api/models/user';
 import { ResponseType } from '@/app/api/types/types';
 import { NextResponse } from 'next/server';
 
-export async function PUT(req: Request) {
+export async function PUT(request: Request) {
   try {
-    const { name, email } = await req.json();
+    const { name, email } = await request.json();
 
-    const userId = req.headers.get('x-user-id');
+    const userId = request.headers.get('x-user-id');
 
     if (!userId) {
       return NextResponse.json<ResponseType>(

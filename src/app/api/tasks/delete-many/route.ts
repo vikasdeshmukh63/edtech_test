@@ -3,11 +3,11 @@ import Task from '../../models/task';
 import connectToDatabase from '../../db/db';
 import { ResponseType } from '../../types/types';
 
-export async function DELETE(req: NextRequest) {
+export async function DELETE(request: NextRequest) {
   try {
-    const { taskIds } = await req.json();
+    const { taskIds } = await request.json();
 
-    const userId = req.headers.get('x-user-id');
+    const userId = request.headers.get('x-user-id');
     if (!userId) {
       return NextResponse.json<ResponseType>(
         {

@@ -4,7 +4,7 @@ import Category from '../../../models/category';
 import { ResponseType } from '../../../types/types';
 
 export async function DELETE(
-  req: Request,
+  request: Request,
   { params }: { params: { id: string } }
 ) {
   try {
@@ -17,7 +17,7 @@ export async function DELETE(
       );
     }
 
-    const userId = req.headers.get('x-user-id');
+    const userId = request.headers.get('x-user-id');
 
     if (!userId) {
       return NextResponse.json<ResponseType>(
@@ -41,7 +41,7 @@ export async function DELETE(
       { success: true, message: 'Category deleted successfully' },
       { status: 200 }
     );
-  } catch (error) {
+  } catch {
     return NextResponse.json<ResponseType>(
       { success: false, message: 'Failed to delete category' },
       { status: 500 }

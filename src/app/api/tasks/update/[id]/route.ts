@@ -4,11 +4,11 @@ import Task from '@/app/api/models/task';
 import { NextResponse } from 'next/server';
 
 export async function PUT(
-  req: Request,
+  request: Request,
   { params }: { params: { id: string } }
 ) {
   try {
-    const updateData: Partial<UpdateTask> = await req.json();
+    const updateData: Partial<UpdateTask> = await request.json();
 
     // Only validate title, description, priority, dueDate, and categoryId if they are provided
     if (
@@ -27,7 +27,7 @@ export async function PUT(
       );
     }
 
-    const userId = req.headers.get('x-user-id');
+    const userId = request.headers.get('x-user-id');
 
     if (!userId) {
       return NextResponse.json<ResponseType>(

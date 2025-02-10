@@ -6,9 +6,9 @@ import { hashPassword } from '../../utils/utils';
 
 export const runtime = 'nodejs';
 
-export async function POST(req: Request) {
+export async function POST(request: Request) {
   try {
-    const { name, email, password }: RegisterCredentials = await req.json();
+    const { name, email, password }: RegisterCredentials = await request.json();
 
     if (!email || !password || !name) {
       return NextResponse.json<AuthResponse>(

@@ -3,9 +3,9 @@ import connectToDatabase from '../../db/db';
 import User from '../../models/user';
 import { ResponseType } from '../../types/types';
 
-export async function GET(req: Request) {
+export async function GET(request: Request) {
   try {
-    const userId = req.headers.get('x-user-id');
+    const userId = request.headers.get('x-user-id');
 
     if (!userId) {
       return NextResponse.json<ResponseType>(

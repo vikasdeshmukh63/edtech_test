@@ -20,9 +20,9 @@ interface TaskQuery {
   >;
 }
 
-export async function GET(req: Request) {
+export async function GET(request: Request) {
   try {
-    const { searchParams } = new URL(req.url);
+    const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '10');
     const priority = searchParams.get('priority');
@@ -34,7 +34,7 @@ export async function GET(req: Request) {
     const categoryId = searchParams.get('categoryId');
     const projectId = searchParams.get('projectId');
 
-    const userId = req.headers.get('x-user-id');
+    const userId = request.headers.get('x-user-id');
     if (!userId) {
       return NextResponse.json<ResponseType>(
         {

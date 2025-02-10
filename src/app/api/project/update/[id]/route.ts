@@ -6,11 +6,11 @@ import { ResponseType } from '../../../types/types';
 export const runtime = 'nodejs';
 
 export async function PUT(
-  req: Request,
+  request: Request,
   { params }: { params: { id: string } }
 ) {
   try {
-    const { title, description }: UpdateProject = await req.json();
+    const { title, description }: UpdateProject = await request.json();
     const { id } = params;
 
     if (!id) {
@@ -27,7 +27,7 @@ export async function PUT(
       );
     }
 
-    const userId = req.headers.get('x-user-id');
+    const userId = request.headers.get('x-user-id');
 
     if (!userId) {
       return NextResponse.json<ResponseType>(

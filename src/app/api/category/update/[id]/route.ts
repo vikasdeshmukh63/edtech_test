@@ -4,11 +4,11 @@ import Category from '../../../models/category';
 import { ResponseType } from '@/app/api/types/types';
 
 export async function PUT(
-  req: Request,
+  request: Request,
   { params }: { params: { id: string } }
 ) {
   try {
-    const { name } = await req.json();
+    const { name } = await request.json();
 
     if (!name) {
       return NextResponse.json<ResponseType>(
@@ -24,7 +24,7 @@ export async function PUT(
       );
     }
 
-    const userId = req.headers.get('x-user-id');
+    const userId = request.headers.get('x-user-id');
 
     if (!userId) {
       return NextResponse.json<ResponseType>(

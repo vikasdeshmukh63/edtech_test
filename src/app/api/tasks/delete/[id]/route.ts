@@ -4,7 +4,7 @@ import { ResponseType } from '@/app/api/types/types';
 import { NextResponse } from 'next/server';
 
 export async function DELETE(
-  req: Request,
+  request: Request,
   { params }: { params: { id: string } }
 ) {
   try {
@@ -17,7 +17,7 @@ export async function DELETE(
       });
     }
 
-    const userId = req.headers.get('x-user-id');
+    const userId = request.headers.get('x-user-id');
     if (!userId) {
       return NextResponse.json<ResponseType>({
         success: false,
