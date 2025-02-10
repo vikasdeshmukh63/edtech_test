@@ -12,13 +12,14 @@ interface FilterParams {
   categoryId?: string;
 }
 
+// ! filtered tasks hook
 export const useFilteredTasks = (filters: FilterParams) => {
   return useInfiniteQuery({
     queryKey: ['filtered-tasks', filters],
     queryFn: async ({ pageParam = 1 }) => {
       const queryParams = new URLSearchParams();
 
-      // Add filters to query params
+      // adding filters to query params
       if (filters.priority) queryParams.append('priority', filters.priority);
       if (filters.assignedTo)
         queryParams.append('assignedTo', filters.assignedTo);
@@ -31,7 +32,7 @@ export const useFilteredTasks = (filters: FilterParams) => {
         queryParams.append('categoryId', filters.categoryId);
 
       queryParams.append('page', pageParam.toString());
-      queryParams.append('limit', '10'); // Number of items per page
+      queryParams.append('limit', '10');
 
       const response = await fetch(
         `${API_ENDPOINTS.FILTERED_TASKS}?${queryParams}`

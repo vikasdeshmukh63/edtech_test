@@ -9,14 +9,14 @@ import { Select } from './Select';
 
 interface TaskCardProps {
   task: Task;
-  users: User[]; // List of users to choose from
+  users: User[];
   onChangeUpdate: (newStatus: Partial<Task>, task: Task) => void;
   isLastItem?: boolean;
   onLastItemInView?: () => void;
   projects: Project[];
   categories: Category[];
-  selectedTasks: string[]; // Changed to an array of strings
-  setSelectedTasks: React.Dispatch<React.SetStateAction<string[]>>; // Updated type
+  selectedTasks: string[];
+  setSelectedTasks: React.Dispatch<React.SetStateAction<string[]>>;
   setIsEditModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setTask: React.Dispatch<React.SetStateAction<Task | null>>;
 }
@@ -31,23 +31,25 @@ const TaskCard: React.FC<TaskCardProps> = ({
   onChangeUpdate,
   isLastItem,
   onLastItemInView,
-  selectedTasks, // Changed to selectedTasks
-  setSelectedTasks, // Changed to setSelectedTasks
+  selectedTasks,
+  setSelectedTasks,
   setIsEditModalOpen,
   setTask,
 }) => {
+  // intersection observer
   const { ref, inView } = useInView({
     threshold: 0,
     triggerOnce: true,
   });
 
+  // handle last item in view
   useEffect(() => {
     if (isLastItem && inView && onLastItemInView) {
       onLastItemInView();
     }
   }, [inView, isLastItem, onLastItemInView]);
 
-  // Priority-based background colors
+  // background colors
   const priorityColors: Record<Priority, string> = {
     low: 'bg-blue-500',
     medium: 'bg-yellow-500',
@@ -64,6 +66,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
     >
       <div className="flex justify-between items-start">
         <span className="flex items-center gap-2">
+          {/* checkbox  */}
           <input
             type="checkbox"
             className="w-5 h-5"
@@ -76,11 +79,13 @@ const TaskCard: React.FC<TaskCardProps> = ({
               )
             }
           />
+          {/* title  */}
           <h3 className="font-semibold text-lg text-black dark:text-white">
             {task.title}
           </h3>
         </span>
         <span className="flex items-center gap-2">
+          {/* edit button  */}
           <Button
             variant="outline"
             className="p-1"
@@ -91,6 +96,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
           >
             <Pencil className="w-4 h-4" />
           </Button>
+          {/* priority  */}
           <span
             className={`text-sm font-medium text-white ${priorityColors[task.priority as Priority]} px-2 py-1 rounded`}
           >
@@ -98,15 +104,14 @@ const TaskCard: React.FC<TaskCardProps> = ({
           </span>
         </span>
       </div>
-
+      {/* description  */}
       <p className="text-gray-600 dark:text-white mt-2 text-sm">
         {task.description.substring(0, 100)}...
       </p>
 
       <div className="mt-4 flex flex-col gap-2">
         <div className="grid grid-cols-2 gap-2">
-          {/* Status Selector */}
-
+          {/* status  */}
           <Select
             options={[
               { value: 'pending', label: 'Pending' },
@@ -118,8 +123,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
             onChange={(e) => onChangeUpdate({ status: e.target.value }, task)}
           />
 
-          {/* User Assignment */}
-
+          {/* user assignment */}
           <Select
             options={users.map((user) => ({
               value: user._id,
@@ -133,7 +137,6 @@ const TaskCard: React.FC<TaskCardProps> = ({
           />
 
           {/* project assignment */}
-
           <Select
             options={projects.map((project) => ({
               value: project._id,
@@ -149,7 +152,6 @@ const TaskCard: React.FC<TaskCardProps> = ({
           />
 
           {/* category assignment */}
-
           <Select
             options={categories.map((category) => ({
               value: category._id,
@@ -166,7 +168,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
           />
         </div>
 
-        {/* Due Date */}
+        {/* due date */}
         <div className="text-sm text-gray-500 dark:text-white mt-2">
           Due: {new Date(task.dueDate).toLocaleDateString()}
         </div>

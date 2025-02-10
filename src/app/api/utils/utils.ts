@@ -3,7 +3,7 @@ import { SignJWT, jwtVerify } from 'jose';
 const JWT_SECRET = process.env.JWT_SECRET as string;
 const secretKey = new TextEncoder().encode(JWT_SECRET);
 
-// Hash a password using Web Crypto API
+// ! hash a password using web crypto api
 export async function hashPassword(password: string): Promise<string> {
   const encoder = new TextEncoder();
   const data = encoder.encode(password);
@@ -11,7 +11,7 @@ export async function hashPassword(password: string): Promise<string> {
   return Buffer.from(hash).toString('base64');
 }
 
-// Verify a password
+// ! verify a password
 export async function verifyPassword(
   password: string,
   hashedPassword: string
@@ -20,7 +20,7 @@ export async function verifyPassword(
   return hashedInput === hashedPassword;
 }
 
-// Generate a JWT token
+// ! generate a jwt token
 export async function generateToken(userId: string): Promise<string> {
   const token = await new SignJWT({ userId })
     .setProtectedHeader({ alg: 'HS256' })
@@ -31,7 +31,7 @@ export async function generateToken(userId: string): Promise<string> {
   return token;
 }
 
-// Verify a JWT token
+// ! verify a jwt token
 export async function verifyToken(token: string) {
   try {
     const { payload } = await jwtVerify(token, secretKey);

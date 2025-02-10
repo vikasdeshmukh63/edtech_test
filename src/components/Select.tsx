@@ -18,6 +18,7 @@ export function Select({
 }: SelectProps) {
   return (
     <div className="w-full">
+      {/* label  */}
       {label && (
         <label
           htmlFor={props.id}
@@ -47,12 +48,14 @@ export function Select({
           ${className}
         `}
       >
+        {/* options  */}
         {options.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}
           </option>
         ))}
       </select>
+      {/* error  */}
       {error && (
         <p className="mt-1 text-sm text-red-600 dark:text-red-400">{error}</p>
       )}

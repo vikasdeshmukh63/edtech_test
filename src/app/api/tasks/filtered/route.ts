@@ -20,9 +20,13 @@ interface TaskQuery {
   >;
 }
 
+// ! filtered tasks route
 export async function GET(request: NextRequest) {
   try {
+    // getting the search params
     const { searchParams } = new URL(request.url);
+
+    // getting the page, limit, priority, etc ...
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '10');
     const priority = searchParams.get('priority');
@@ -34,7 +38,10 @@ export async function GET(request: NextRequest) {
     const categoryId = searchParams.get('categoryId');
     const projectId = searchParams.get('projectId');
 
+    // getting the user id
     const userId = request.headers.get('x-user-id');
+
+    // if the user id is not present
     if (!userId) {
       return NextResponse.json<ResponseType>(
         {
@@ -45,12 +52,13 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    // connecting to the database
     await connectToDatabase();
 
-    // Build query
+    // buiod query
     const query: TaskQuery = {};
 
-    // Add filters only if they have values
+    // add filters only if they have values
     if (priority) query.priority = priority;
     if (assignedTo) query.assignedTo = assignedTo;
     if (status) query.status = status;
@@ -62,6 +70,7 @@ export async function GET(request: NextRequest) {
       if (endDate) query.dueDate.$lte = new Date(endDate);
     }
 
+    // if the search is present
     if (search) {
       query.$or = [
         { title: { $regex: search, $options: 'i' } },
@@ -69,8 +78,10 @@ export async function GET(request: NextRequest) {
       ];
     }
 
+    // calculate the skip
     const skip = (page - 1) * limit;
 
+    // get the tasks and the total number of tasks
     const [tasks, total] = await Promise.all([
       Task.find(query)
         .skip(skip)
@@ -80,8 +91,10 @@ export async function GET(request: NextRequest) {
       Task.countDocuments(query),
     ]);
 
+    // check if there are more tasks
     const hasMore = total > skip + tasks.length;
 
+    // creating the response
     return NextResponse.json<ResponseType>(
       {
         success: true,
@@ -93,6 +106,7 @@ export async function GET(request: NextRequest) {
       { status: 200 }
     );
   } catch (error) {
+    // creating the response
     return NextResponse.json<ResponseType>(
       {
         success: false,

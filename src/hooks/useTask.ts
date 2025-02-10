@@ -1,10 +1,12 @@
 import { CreateTask, UpdateTask } from '@/app/api/types/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
+
+// ! task hook
 export const useTask = () => {
   const queryClient = useQueryClient();
 
-  // Add getAllTasks query
+  // ! get all tasks
   const getAllTasks = useQuery({
     queryKey: ['tasks'],
     queryFn: async () => {
@@ -17,7 +19,7 @@ export const useTask = () => {
     },
   });
 
-  // Add getTask query
+  // ! get all user tasks
   const getAllUserTasks = useQuery({
     queryKey: ['user-tasks'],
     queryFn: async () => {
@@ -30,6 +32,7 @@ export const useTask = () => {
     },
   });
 
+  // ! create task
   const createTaskMutation = useMutation({
     mutationFn: async (task: CreateTask) => {
       const response = await fetch('/api/tasks/create', {
@@ -58,6 +61,7 @@ export const useTask = () => {
     },
   });
 
+  // ! update task
   const updateTaskMutation = useMutation({
     mutationFn: async (task: UpdateTask) => {
       const response = await fetch(`/api/tasks/update/${task._id}`, {
@@ -86,6 +90,7 @@ export const useTask = () => {
     },
   });
 
+  // ! delete task
   const deleteTaskMutation = useMutation({
     mutationFn: async (taskId: string) => {
       const response = await fetch(`/api/tasks/delete/${taskId}`, {
@@ -101,6 +106,7 @@ export const useTask = () => {
     },
   });
 
+  // ! delete many tasks
   const deleteManyTasksMutation = useMutation({
     mutationFn: async (taskIds: string[]) => {
       const response = await fetch('/api/tasks/delete-many', {

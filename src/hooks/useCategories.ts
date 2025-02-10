@@ -6,6 +6,7 @@ import { Category } from '@/types/types';
 export const useCategories = () => {
   const queryClient = useQueryClient();
 
+  // ! get all categories
   const getAllCategories = useQuery({
     queryKey: ['categories'],
     queryFn: async () => {
@@ -18,6 +19,7 @@ export const useCategories = () => {
     },
   });
 
+  // ! create category
   const createCategoryMutation = useMutation({
     mutationFn: async (category: { name: string }) => {
       const response = await fetch(API_ENDPOINTS.CREATE_CATEGORY, {
@@ -44,6 +46,7 @@ export const useCategories = () => {
     },
   });
 
+  // ! update category
   const updateCategoryMutation = useMutation({
     mutationFn: async (category: Category) => {
       const response = await fetch(
@@ -73,6 +76,7 @@ export const useCategories = () => {
     },
   });
 
+  // ! delete many categories
   const deleteManyCategoriesMutation = useMutation({
     mutationFn: async (categoryIds: string[]) => {
       const response = await fetch(API_ENDPOINTS.DELETE_MANY_CATEGORIES, {

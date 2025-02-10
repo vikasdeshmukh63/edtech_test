@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Button } from './Button';
 import { Input } from './Input';
 import { Select } from './Select';
+
 interface TaskFiltersProps {
   users: User[];
   categories: Category[];
@@ -33,6 +34,7 @@ export function TaskFilters({
   isOpen,
   onClose,
 }: TaskFiltersProps) {
+  // states
   const [filters, setFilters] = useState({
     priority: '',
     assignedTo: '',
@@ -44,6 +46,7 @@ export function TaskFilters({
     projectId: '',
   });
 
+  // handle change function
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -51,11 +54,13 @@ export function TaskFilters({
     setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
+  // handle apply function
   const handleApply = () => {
     onFilterChange(filters);
     onClose();
   };
 
+  // handle reset function
   const handleReset = () => {
     const resetFilters = {
       priority: '',
@@ -72,13 +77,16 @@ export function TaskFilters({
     onClose();
   };
 
+  // if modal is not open
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md">
+        {/* heading  */}
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold">Filter Tasks</h2>
+          {/* close button  */}
           <Button
             variant="outline"
             onClick={onClose}
@@ -89,6 +97,7 @@ export function TaskFilters({
         </div>
 
         <div className="space-y-4">
+          {/* search  */}
           <Input
             label="Search"
             name="search"
@@ -97,6 +106,7 @@ export function TaskFilters({
             onChange={handleChange}
           />
 
+          {/* category  */}
           <Select
             label="Category"
             name="categoryId"
@@ -111,6 +121,7 @@ export function TaskFilters({
             ]}
           />
 
+          {/* priority  */}
           <Select
             label="Priority"
             name="priority"
@@ -122,6 +133,7 @@ export function TaskFilters({
             ]}
           />
 
+          {/* status  */}
           <Select
             label="Status"
             name="status"
@@ -130,6 +142,7 @@ export function TaskFilters({
             options={[{ value: '', label: 'All Statuses' }, ...STATUS_OPTIONS]}
           />
 
+          {/* assigned to  */}
           <Select
             label="Assigned To"
             name="assignedTo"
@@ -144,6 +157,7 @@ export function TaskFilters({
             ]}
           />
 
+          {/* project  */}
           <Select
             label="Project"
             name="projectId"
@@ -158,10 +172,13 @@ export function TaskFilters({
             ]}
           />
 
+          {/* action buttons  */}
           <div className="flex gap-2 justify-end mt-6">
+            {/* reset button  */}
             <Button variant="outline" onClick={handleReset}>
               Reset
             </Button>
+            {/* apply button  */}
             <Button onClick={handleApply}>Apply Filters</Button>
           </div>
         </div>

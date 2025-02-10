@@ -9,16 +9,20 @@ export const config = {
 };
 
 export async function middleware(request: NextRequest) {
+  // getting the path
   const path = request.nextUrl.pathname;
 
+  // if the path starts with /api/auth
   if (path.startsWith('/api/auth')) {
     return NextResponse.next();
   }
 
+  // if the path starts with /api
   if (path.startsWith('/api')) {
     const tokenCookie = request.cookies.get('token');
     const token = tokenCookie?.value;
 
+    // if the token is not present
     if (!token) {
       return NextResponse.json<ResponseType>(
         { success: false, message: 'Authentication required' },
@@ -26,9 +30,11 @@ export async function middleware(request: NextRequest) {
       );
     }
 
+    // verifying the token
     try {
       const decoded = await verifyToken(token);
 
+      // if the token is invalid
       if (!decoded || !decoded.userId) {
         return NextResponse.json<ResponseType>(
           { success: false, message: 'Invalid token' },
@@ -36,6 +42,7 @@ export async function middleware(request: NextRequest) {
         );
       }
 
+      // setting the user id
       const headers = new Headers(request.headers);
       headers.set('x-user-id', decoded.userId as string);
 
@@ -45,6 +52,7 @@ export async function middleware(request: NextRequest) {
         },
       });
     } catch (error) {
+      // if the token is invalid
       return NextResponse.json<ResponseType>(
         { success: false, message: 'Invalid token' },
         { status: 401 }

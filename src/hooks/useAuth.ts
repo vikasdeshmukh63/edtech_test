@@ -9,10 +9,13 @@ import {
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { API_ENDPOINTS } from '@/constants/constants';
+
+// ! auth hook
 export const useAuth = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
 
+  // ! signup mutation
   const signupMutation = useMutation({
     mutationFn: async (credentials: RegisterCredentials) => {
       const response = await fetch(API_ENDPOINTS.AUTH_SIGNUP, {
@@ -33,8 +36,12 @@ export const useAuth = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['user'] });
     },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Signup failed');
+    },
   });
 
+  // ! signin mutation
   const signinMutation = useMutation({
     mutationFn: async (credentials: LoginCredentials) => {
       const response = await fetch(API_ENDPOINTS.AUTH_SIGNIN, {
@@ -56,8 +63,12 @@ export const useAuth = () => {
       queryClient.setQueryData(['auth'], true);
       queryClient.setQueryData(['user'], data.user);
     },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Signin failed');
+    },
   });
 
+  // ! logout mutation
   const logoutMutation = useMutation({
     mutationFn: async () => {
       const response = await fetch(API_ENDPOINTS.AUTH_LOGOUT, {
@@ -69,13 +80,10 @@ export const useAuth = () => {
       return response.json();
     },
     onSuccess: () => {
-      // Clear all queries from the cache
+      // clearing all queries from the cache
       queryClient.clear();
-      // Set auth state to false
       queryClient.setQueryData(['auth'], false);
-      // Remove user data
       queryClient.setQueryData(['user'], null);
-      // Redirect to home page
       router.push('/');
       toast.success('Logged out successfully');
     },

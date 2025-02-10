@@ -7,11 +7,14 @@ type ErrorHandlerFunction = (
   params?: any
 ) => Promise<NextResponse>;
 
+// ! error handler
 export const errorHandler = (fn: ErrorHandlerFunction) => {
   return async (request: NextRequest, params?: any) => {
     try {
+      // call the function
       return await fn(request, params);
     } catch (error) {
+      // log the error
       console.error('Error:', error);
 
       if (error instanceof ApiError) {
@@ -23,7 +26,7 @@ export const errorHandler = (fn: ErrorHandlerFunction) => {
           { status: error.statusCode }
         );
       }
-      // Handle mongoose validation errors
+      // handle mongoose validation errors
       if ((error as any).name === 'ValidationError') {
         return NextResponse.json<ResponseType>(
           {
@@ -36,7 +39,7 @@ export const errorHandler = (fn: ErrorHandlerFunction) => {
         );
       }
 
-      // Handle mongoose duplicate key errors
+      // handle mongoose duplicate key errors
       if ((error as any).code === 11000) {
         return NextResponse.json<ResponseType>(
           {
@@ -47,7 +50,7 @@ export const errorHandler = (fn: ErrorHandlerFunction) => {
         );
       }
 
-      // Handle all other errors
+      // handle all other errors
       return NextResponse.json<ResponseType>(
         {
           success: false,

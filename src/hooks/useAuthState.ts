@@ -1,5 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { API_ENDPOINTS } from '@/constants/constants';
+
+// ! auth state hook
 export const useAuthState = () => {
   return useQuery({
     queryKey: ['auth'],

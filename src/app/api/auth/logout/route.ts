@@ -4,7 +4,9 @@ import { errorHandler } from '../../utils/errorHandler';
 
 export const runtime = 'nodejs';
 
+// ! logout route
 export const POST = errorHandler(async () => {
+  // creating the response
   const response = NextResponse.json<ResponseType>(
     {
       success: true,
@@ -13,7 +15,7 @@ export const POST = errorHandler(async () => {
     { status: 200 }
   );
 
-  // Clear the token cookie
+  // clearing the token cookie
   response.cookies.set('token', '', {
     expires: new Date(0),
     path: '/',

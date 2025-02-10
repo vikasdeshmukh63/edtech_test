@@ -3,15 +3,19 @@ import connectToDatabase from '@/app/api/db/db';
 import Task from '@/app/api/models/task';
 import { NextRequest, NextResponse } from 'next/server';
 
+// ! update task route
 export async function PUT(
   request: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
   try {
+    // getting the update data
     const updateData: Partial<UpdateTask> = await request.json();
+
+    // getting the id
     const { id } = await context.params;
 
-    // Only validate title, description, priority, dueDate, and categoryId if they are provided
+    // validate title, etc..  if they are provided
     if (
       (updateData.title !== undefined && !updateData.title) ||
       (updateData.description !== undefined && !updateData.description) ||
@@ -28,8 +32,10 @@ export async function PUT(
       );
     }
 
+    // getting the user id
     const userId = request.headers.get('x-user-id');
 
+    // if the user id is not present
     if (!userId) {
       return NextResponse.json<ResponseType>(
         {
@@ -40,11 +46,13 @@ export async function PUT(
       );
     }
 
+    // connecting to the database
     await connectToDatabase();
 
-    // Only update the fields that are provided
+    // update the fields that are provided
     await Task.findByIdAndUpdate(id, { $set: updateData }, { new: true });
 
+    // creating the response
     return NextResponse.json<ResponseType>(
       {
         success: true,
@@ -53,6 +61,7 @@ export async function PUT(
       { status: 200 }
     );
   } catch (error) {
+    // creating the response
     return NextResponse.json<ResponseType>(
       {
         success: false,

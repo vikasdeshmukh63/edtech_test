@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { ResponseType } from './types/types';
 
+// ! get not found route
 export async function GET() {
   return NextResponse.json<ResponseType>(
     {
@@ -11,6 +12,7 @@ export async function GET() {
   );
 }
 
+// ! post not found route
 export async function POST() {
   return NextResponse.json<ResponseType>(
     {
@@ -21,6 +23,7 @@ export async function POST() {
   );
 }
 
+// ! put not found route
 export async function PUT() {
   return NextResponse.json<ResponseType>(
     {
@@ -31,6 +34,7 @@ export async function PUT() {
   );
 }
 
+// ! delete not found route
 export async function DELETE() {
   return NextResponse.json<ResponseType>(
     {

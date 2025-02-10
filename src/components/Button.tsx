@@ -12,9 +12,11 @@ export function Button({
   className = '',
   ...props
 }: ButtonProps) {
+  //base style
   const baseStyles =
     'px-4 py-2 rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed';
 
+  // varient styles
   const variants = {
     primary:
       'bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600',

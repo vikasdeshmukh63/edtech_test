@@ -16,6 +16,7 @@ const ProjectCard = ({
   setEditProject: (project: Project) => void;
   setIsCreateModalOpen: (open: boolean) => void;
 }) => {
+  // handle checkbox change
   const handleCheckboxChange = () => {
     setSelectedProjects((prev: string[]) =>
       prev.includes(project._id)
@@ -27,19 +28,23 @@ const ProjectCard = ({
   return (
     <div className="flex justify-between items-center p-2 rounded-lg border w-full sm:w-auto min-h-[80px]">
       <span className="flex items-center gap-2 flex-1">
+        {/* checkbox  */}
         <input
           type="checkbox"
           checked={selectedProjects.includes(project._id)}
           onChange={handleCheckboxChange}
         />
         <div className="flex flex-col min-h-[60px]">
+          {/* title  */}
           <h3 className="font-bold">{project.title}</h3>
+          {/* description  */}
           <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
             {project.description.substring(0, 100)}...
           </p>
         </div>
       </span>
 
+      {/* edit button  */}
       <Button
         variant="outline"
         onClick={() => {

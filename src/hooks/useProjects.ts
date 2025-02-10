@@ -3,9 +3,11 @@ import { API_ENDPOINTS } from '@/constants/constants';
 import { Project } from '@/types/types';
 import { toast } from 'react-toastify';
 
+// ! projects hook
 export const useProjects = () => {
   const queryClient = useQueryClient();
 
+  // ! get all projects
   const getAllProjects = useQuery({
     queryKey: ['projects'],
     queryFn: async () => {
@@ -18,6 +20,7 @@ export const useProjects = () => {
     },
   });
 
+  // ! create project
   const createProjectMutation = useMutation({
     mutationFn: async (project: { title: string; description: string }) => {
       const response = await fetch(API_ENDPOINTS.CREATE_PROJECT, {
@@ -44,6 +47,7 @@ export const useProjects = () => {
     },
   });
 
+  // ! update project
   const updateProjectMutation = useMutation({
     mutationFn: async (project: Project) => {
       const response = await fetch(API_ENDPOINTS.UPDATE_PROJECT(project._id), {
@@ -70,6 +74,7 @@ export const useProjects = () => {
     },
   });
 
+  // ! delete many projects
   const deleteManyProjectsMutation = useMutation({
     mutationFn: async (projectIds: string[]) => {
       const response = await fetch(API_ENDPOINTS.DELETE_MANY_PROJECTS, {

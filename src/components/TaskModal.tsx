@@ -14,9 +14,10 @@ interface TaskModalProps {
   categories: Category[];
   projects: Project[];
   users: User[];
-  task?: Task | null; // Optional task prop for editing
+  task?: Task | null;
 }
 
+// validation schema
 const taskSchema = yup.object().shape({
   title: yup.string().required('Title is required'),
   description: yup.string().required('Description is required'),
@@ -35,7 +36,10 @@ export const TaskModal: React.FC<TaskModalProps> = ({
   projects,
   task,
 }) => {
+  // task hook
   const { createTask, updateTask } = useTask();
+
+  // states
   const [formData, setFormData] = useState({
     title: task?.title || '',
     description: task?.description || '',
@@ -49,6 +53,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
   });
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
+  // seeting initial values
   useEffect(() => {
     if (task) {
       setFormData({
@@ -65,13 +70,15 @@ export const TaskModal: React.FC<TaskModalProps> = ({
     }
   }, [task]);
 
+  // handle submit function
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
 
     try {
+      // validate form data
       await taskSchema.validate(formData, { abortEarly: false });
-
+      //edit task
       if (task) {
         updateTask({
           ...formData,
@@ -80,6 +87,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
           dueDate: formData.dueDate,
         });
       } else {
+        // create task
         createTask({
           ...formData,
           dueDate: formData.dueDate,
@@ -87,6 +95,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
       }
       onClose();
     } catch (err) {
+      // if validation error
       if (err instanceof yup.ValidationError) {
         const fieldErrors: { [key: string]: string } = {};
         err.inner.forEach((error) => {
@@ -101,15 +110,19 @@ export const TaskModal: React.FC<TaskModalProps> = ({
     }
   };
 
+  // if modal is not open
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md">
+        {/* heading  */}
         <h2 className="text-xl font-semibold mb-4">
           {task ? 'Edit Task' : 'Create New Task'}
         </h2>
+        {/* form  */}
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* title  */}
           <Input
             label="Title"
             value={formData.title}
@@ -120,6 +133,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
             }
             error={errors.title}
           />
+          {/* description  */}
           <Input
             label="Description"
             value={formData.description}
@@ -130,6 +144,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
             }
             error={errors.description}
           />
+          {/* priority  */}
           <div className="grid grid-cols-2 gap-4">
             <Select
               label="Priority"
@@ -193,6 +208,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
               error={errors.projectId}
             />
           </div>
+          {/* due date  */}
           <Input
             label="Due Date"
             type="date"
@@ -203,10 +219,13 @@ export const TaskModal: React.FC<TaskModalProps> = ({
             }
             error={errors.dueDate}
           />
+          {/* action buttons  */}
           <div className="flex justify-end gap-2">
+            {/* cancel button  */}
             <Button variant="outline" onClick={onClose}>
               Cancel
             </Button>
+            {/* submit button  */}
             <Button type="submit">
               {task ? 'Update Task' : 'Create Task'}
             </Button>

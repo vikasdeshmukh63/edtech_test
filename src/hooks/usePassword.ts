@@ -2,7 +2,9 @@ import { useMutation } from '@tanstack/react-query';
 import { API_ENDPOINTS } from '@/constants/constants';
 import { toast } from 'react-toastify';
 
+// ! password hook
 export const usePassword = () => {
+  // ! reset password mutation
   const resetPasswordMutation = useMutation({
     mutationFn: async (passwords: {
       oldPassword: string;

@@ -2,9 +2,11 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { API_ENDPOINTS } from '@/constants/constants';
 import { toast } from 'react-toastify';
 
+// ! profile hook
 export const useProfile = () => {
   const queryClient = useQueryClient();
 
+  // ! get profile
   const getProfile = useQuery({
     queryKey: ['profile'],
     queryFn: async () => {
@@ -16,6 +18,7 @@ export const useProfile = () => {
     },
   });
 
+  // ! update profile
   const updateProfileMutation = useMutation({
     mutationFn: async (profile: { name: string; email: string }) => {
       const response = await fetch(API_ENDPOINTS.UPDATE_USER, {

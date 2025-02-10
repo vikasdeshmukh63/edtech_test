@@ -10,25 +10,37 @@ import { Button } from './Button';
 import { ThemeToggle } from './ThemeToggle';
 
 const getNavigationItems = (isAuthenticated: boolean) => {
+  // common routes
   const commonItems = [{ href: '/about', label: 'About' }];
 
+  // auth routes
   const authItems = [
     { href: '/dashboard', label: 'Dashboard' },
     { href: '/categories', label: 'Categories' },
     { href: '/projects', label: 'Projects' },
   ];
 
+  // return routes
   return isAuthenticated ? [...authItems, ...commonItems] : commonItems;
 };
 
 const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  // chedking for authentication
   const { data: isAuthenticated, isLoading } = useAuthState();
+
+  // states
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // auth hook
   const { logout } = useAuth();
+
+  // router
   const router = useRouter();
 
+  // navigation items
   const navigationItems = getNavigationItems(isAuthenticated || false);
 
+  // handle logout
   const handleLogout = () => {
     logout();
   };
@@ -38,7 +50,7 @@ const Header = () => {
       <div className="flex justify-between items-center py-4 px-6">
         <div className="text-lg font-bold">Task Manager</div>
 
-        {/* Desktop Navigation */}
+        {/* big screen navigation */}
         <nav className="hidden md:block">
           <ul className="flex space-x-4">
             {navigationItems.map(({ href, label }) => (
@@ -52,11 +64,14 @@ const Header = () => {
         </nav>
 
         <div className="flex items-center gap-4">
+          {/* theme toggle */}
           <ThemeToggle />
+
           {!isLoading && (
             <>
               {isAuthenticated ? (
                 <>
+                  {/* logout button  */}
                   <Button
                     variant="outline"
                     onClick={handleLogout}
@@ -65,6 +80,7 @@ const Header = () => {
                     <LogOut size={16} />
                     Logout
                   </Button>
+                  {/* profile button  */}
                   <Button
                     variant="outline"
                     onClick={() => router.push('/profile')}
@@ -74,12 +90,14 @@ const Header = () => {
                 </>
               ) : (
                 <div className="hidden md:flex gap-2">
+                  {/* sign in button  */}
                   <Button
                     variant="outline"
                     onClick={() => router.push('/auth/signin')}
                   >
                     Sign In
                   </Button>
+                  {/* sign up button  */}
                   <Button
                     variant="primary"
                     onClick={() => router.push('/auth/signup')}
@@ -90,6 +108,7 @@ const Header = () => {
               )}
             </>
           )}
+          {/* small screen breadcrumb button  */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="md:hidden p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
@@ -99,10 +118,11 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Mobile Navigation */}
+      {/* small screen navigation */}
       {isMenuOpen && (
         <nav className="md:hidden absolute top-full left-0 right-0 bg-gray-100 dark:bg-gray-800 border-t dark:border-gray-700">
           <ul className="flex flex-col py-2">
+            {/* navigation items */}
             {navigationItems.map(({ href, label }) => (
               <li key={href}>
                 <Link
@@ -114,21 +134,36 @@ const Header = () => {
                 </Link>
               </li>
             ))}
+            {/* logout button */}
             {isAuthenticated ? (
-              <li>
-                <button
-                  onClick={() => {
-                    handleLogout();
-                    setIsMenuOpen(false);
-                  }}
-                  className="w-full text-left px-6 py-2 font-semibold hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center gap-2"
-                >
-                  <LogOut size={16} />
-                  Logout
-                </button>
-              </li>
+              <>
+                {/* logout button  */}
+                <li>
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setIsMenuOpen(false);
+                    }}
+                    className="w-full text-left px-6 py-2 font-semibold hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center gap-2"
+                  >
+                    <LogOut size={16} />
+                    Logout
+                  </button>
+                </li>
+                {/* profile button  */}
+                <li>
+                  <button
+                    onClick={() => router.push('/profile')}
+                    className="w-full text-left px-6 py-2 font-semibold hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center gap-2"
+                  >
+                    <CircleUserRound />
+                    profile
+                  </button>
+                </li>
+              </>
             ) : (
               <>
+                {/* sign in button */}
                 <li>
                   <Link
                     href="/auth/signin"
@@ -138,6 +173,7 @@ const Header = () => {
                     Sign In
                   </Link>
                 </li>
+                {/* sign up button */}
                 <li>
                   <Link
                     href="/auth/signup"

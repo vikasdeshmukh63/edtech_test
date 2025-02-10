@@ -19,6 +19,7 @@ const CategoryCard = ({
   return (
     <div className="flex justify-between items-center p-2 rounded-lg border w-full sm:w-auto">
       <span className="flex items-center gap-2">
+        {/* checkbox  */}
         <input
           type="checkbox"
           checked={selectedCategories.includes(category._id)}
@@ -31,9 +32,11 @@ const CategoryCard = ({
           }}
         />
 
+        {/* name  */}
         <span className="truncate">{category.name}</span>
       </span>
 
+      {/* edit button  */}
       <Button
         variant="outline"
         onClick={() => {

@@ -15,11 +15,15 @@ export function Input({
   type = 'text',
   ...props
 }: InputProps) {
+  // states
   const [showPassword, setShowPassword] = useState(false);
+
+  // check for password input
   const isPasswordInput = type === 'password';
 
   return (
     <div className="mb-4">
+      {/* label  */}
       <label
         htmlFor={props.id}
         className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
@@ -27,6 +31,7 @@ export function Input({
         {label}
       </label>
       <div className="relative">
+        {/* input  */}
         <input
           {...props}
           type={isPasswordInput ? (showPassword ? 'text' : 'password') : type}
@@ -41,6 +46,7 @@ export function Input({
             ${className}
           `}
         />
+        {/* password input  */}
         {isPasswordInput && (
           <button
             type="button"
@@ -55,6 +61,7 @@ export function Input({
           </button>
         )}
       </div>
+      {/* error  */}
       {error && (
         <p className="mt-1 text-sm text-red-600 dark:text-red-400">{error}</p>
       )}

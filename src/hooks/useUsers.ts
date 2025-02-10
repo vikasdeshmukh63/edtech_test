@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { API_ENDPOINTS } from '@/constants/constants';
 
+// ! users hook
 export const useUsers = () => {
   return useQuery({
     queryKey: ['users'],

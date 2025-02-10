@@ -7,6 +7,7 @@ import {
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { useState } from 'react';
 
+// default query client config
 const defaultQueryClientConfig = {
   defaultOptions: {
     queries: {
