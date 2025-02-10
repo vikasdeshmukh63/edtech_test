@@ -48,10 +48,11 @@ export default function Dashboard() {
   };
 
   const handleUpdateTask = (updates: Partial<Task>, task: Task) => {
+    console.log(task)
     updateTask({
       ...task,
       ...updates,
-      dueDate: task.dueDate.toISOString(),
+      dueDate: task.dueDate instanceof Date ? task.dueDate.toISOString() : task.dueDate,
     });
   };
 

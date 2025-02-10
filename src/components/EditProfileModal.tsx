@@ -25,8 +25,8 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
   user,
 }) => {
   const [formData, setFormData] = useState({
-    name: user.name,
-    email: user.email,
+    name: user?.name,
+    email: user?.email,
   });
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const { updateProfile } = useProfile();
